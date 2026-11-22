@@ -144,7 +144,7 @@ export const EXERCISES: Exercise[] = [
       "Contourne le dernier plot et reviens en slalom jusqu'au départ.",
       "Pour le test : un aller-retour chronométré, sans toucher de plot. Garde le meilleur de 2 essais.",
     ],
-    dose: "Semaines 1 à 3 : 4 allers-retours. Semaines 4 à 12 : 6 allers-retours. 30 secondes de récupération entre chaque. Test : 2 essais.",
+    dose: "Semaines 1 à 3 : 4 allers-retours. Semaines 4 à 6 : 6 allers-retours. 30 secondes de récupération entre chaque. Semaines 10 à 12 : dans le circuit Maestro. Test : 2 essais.",
     mistakes: [
       "Pousser le ballon trop loin et devoir courir après.",
       "N'utiliser que le pied fort.",
@@ -215,7 +215,7 @@ export const EXERCISES: Exercise[] = [
       "Pousse le ballon de l'autre côté et accélère jusqu'à traverser une porte.",
       "Change de côté à chaque passage. Quand la feinte de corps est propre, passe au passement de jambes.",
     ],
-    dose: "Semaines 4 à 6 : 3 séries de 6 passages. Semaines 7 à 12 : 4 séries de 6 passages. 1 minute de pause.",
+    dose: "Semaines 4 à 6 : 3 séries de 6 passages. Semaines 7 à 9 : 4 séries de 6 passages. 1 minute de pause. Semaines 10 à 12 : dans le circuit Maestro.",
     mistakes: [
       "Faire la feinte collé au plot. En match, le défenseur aurait déjà le ballon.",
       "Feinter seulement avec les pieds. Ce sont les épaules qui trompent le défenseur.",
@@ -276,13 +276,13 @@ export const EXERCISES: Exercise[] = [
     pillar: "technique",
     goal: "Cadrer tes frappes du cou-de-pied en visant un coin. C'est aussi le test de finition : 10 frappes, combien dans le cadre.",
     steps: [
-      "Place le ballon à environ 16 mètres du but, l'entrée de la surface. Pas de but : deux plots à 5 mètres d'écart devant un mur.",
+      "Place le ballon à environ 16 mètres du but, à l'entrée de la surface. Sans but, pose deux plots à 5 mètres l'un de l'autre au pied d'un mur : ce sont tes poteaux.",
       "Pose deux plots à l'intérieur des poteaux pour marquer les coins à viser.",
       "Prends 3 pas d'élan en diagonale. Pied d'appui à côté du ballon, pointé vers la cible.",
       "Frappe du cou-de-pied, cheville bloquée, buste au-dessus du ballon pour qu'il reste bas.",
       "Pour le test : 10 frappes depuis le même endroit, tu comptes celles qui entrent dans le cadre.",
     ],
-    dose: "Semaines 1 à 6 : 2 séries de 6 frappes. Semaines 7 à 12 : 3 séries de 6 frappes. 3 de chaque pied par série. Test : 10 frappes.",
+    dose: "Semaines 1 à 6 : 2 séries de 6 frappes. Semaines 7 à 9 : 3 séries de 6 frappes. 3 de chaque pied par série. Semaines 10 à 12 : dans le circuit Maestro. Test : 10 frappes.",
     mistakes: [
       "Se pencher en arrière : le ballon passe au-dessus.",
       "Frapper de la pointe, c'est imprécis.",
@@ -305,13 +305,57 @@ export const EXERCISES: Exercise[] = [
       ],
     },
   },
+  {
+    slug: "circuit-maestro",
+    name: "Circuit Maestro",
+    pillar: "technique",
+    goal: "Enchaîner conduite, feinte et frappe comme dans une action de match, en gardant un geste propre quand le souffle est court.",
+    steps: [
+      "Installe 3 postes à la suite : les 6 plots du slalom, un plot défenseur avec une porte derrière lui, puis le but (ou tes deux plots poteaux) à 16 mètres.",
+      "Poste 1 : un aller-retour en slalom, comme dans la fiche Slalom 6 plots.",
+      "Poste 2 : 2 passages feinte et accélération, un de chaque côté.",
+      "Poste 3 : 2 frappes cadrées, une de chaque pied, avec ta routine avant chaque frappe.",
+      "Un tour, ce sont les 3 postes à la suite, sans pause. Entre deux tours, tu récupères 2 minutes en marchant.",
+    ],
+    dose: "Semaine 10 : 4 tours. Semaines 11 et 12 : 5 tours. 2 minutes de récupération en marchant entre deux tours.",
+    mistakes: [
+      "Bâcler le slalom pour arriver plus vite à la frappe.",
+      "Frapper sans routine parce que tu es essoufflé.",
+      "Raccourcir les 2 minutes de récupération.",
+    ],
+    easier: "3 tours, avec une seule frappe par tour.",
+    harder: "Chronomètre chaque tour et essaie de garder le même temps du premier au dernier.",
+    diagram: {
+      cones: [
+        [8, 52],
+        [14, 52],
+        [20, 52],
+        [26, 52],
+        [32, 52],
+        [38, 52],
+        [56, 34],
+        [72, 22],
+        [72, 28],
+        [80, 4],
+        [98, 4],
+      ],
+      ball: [4, 46],
+      player: [4, 50],
+      paths: [
+        { from: [6, 46], to: [42, 46], kind: "dribble" },
+        { from: [44, 44], to: [52, 37], kind: "dribble" },
+        { from: [52, 37], to: [74, 25], kind: "dribble" },
+        { from: [76, 24], to: [88, 6], kind: "pass" },
+      ],
+    },
+  },
 
   // Physique
   {
     slug: "echauffement-dynamique",
     name: "Échauffement dynamique",
     pillar: "physique",
-    goal: "Monter la température du corps et réveiller les articulations avant de forcer. Il ouvre chaque séance avec course ou ballon.",
+    goal: "Monter la température du corps et réveiller les articulations avant de forcer. Tu le fais au début des séances du lundi au jeudi et avant les tests du dimanche.",
     steps: [
       "Pose deux plots à environ 15 mètres l'un de l'autre.",
       "Fais 2 allers-retours en footing léger.",
@@ -589,7 +633,7 @@ export const EXERCISES: Exercise[] = [
       "Continuer quand la tête tourne. Arrête et respire normalement.",
     ],
     easier: "Fais 4-4-4 : inspire sur 4, bloque sur 4, souffle sur 4.",
-    harder: "Fais-le debout dans le vestiaire, yeux ouverts, sans que personne le remarque.",
+    harder: "Fais-le assis dans le vestiaire, yeux ouverts, sans que personne le remarque.",
     photo: "/photos/exercices/respiration-4-7-8.jpg",
   },
   {
@@ -705,7 +749,7 @@ export const EXERCISES: Exercise[] = [
     pillar: "mental",
     goal: "Tirer une leçon de chaque match en 5 minutes, puis passer à autre chose.",
     steps: [
-      "Le soir du match, réponds par écrit à 3 questions.",
+      "Le soir du match, réponds à 3 questions dans ton carnet (un cahier ou les notes de ton téléphone).",
       "Une action réussie : qu'est-ce que tu as fait de bien ?",
       "Une erreur : qu'est-ce que tu as fait juste après ? As-tu fait RESET ?",
       "Ton objectif de match : atteint ou pas ?",
@@ -771,7 +815,7 @@ export const EXERCISES: Exercise[] = [
     mistakes: [
       "Regarder trop tard, quand le ballon est déjà dans tes pieds.",
       "Tourner tout le corps. Seule la tête bouge.",
-      "Annoncer un nombre au hasard pour aller plus vite.",
+      "Deviner le nombre sans avoir tourné la tête, pour aller plus vite.",
     ],
     easier: "Seul : à chaque retour du ballon, regarde un repère derrière toi (un arbre, un poteau) avant de contrôler.",
     harder: "Regarde deux fois avant chaque réception, une fois de chaque côté.",

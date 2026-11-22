@@ -4,8 +4,8 @@ import { useEffect, useState, type Ref } from "react";
 import { ArrowCounterClockwiseIcon, ArrowRightIcon } from "@phosphor-icons/react";
 import { Button, ButtonLink } from "@/components/Button";
 import { Radar } from "@/components/charts/Radar";
-import { PILLARS, PILLAR_LABELS, PROFILES, type Pillar } from "@/content/quiz";
-import { strongestPillar, weakestPillar, type QuizResult as Result } from "@/lib/quiz";
+import { PILLARS, PILLAR_LABELS, PROFILES } from "@/content/quiz";
+import { resultHighlights, type QuizResult as Result } from "@/lib/quiz";
 
 function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -42,12 +42,12 @@ function Score({ value }: { value: number }) {
 
 function Verdict({
   title,
-  pillar,
+  label,
   score,
   text,
 }: {
   title: string;
-  pillar: Pillar;
+  label: string;
   score: number;
   text: string;
 }) {
@@ -55,7 +55,7 @@ function Verdict({
     <div className="border-t-2 border-ink pt-5">
       <h3 className="text-sm font-semibold tracking-[0.04em] text-ink-2 uppercase">{title}</h3>
       <p className="mt-2 flex items-baseline justify-between gap-4 text-2xl font-bold font-stretch-85%">
-        {PILLAR_LABELS[pillar]}
+        {label}
         <span className="font-mono text-xl font-medium">
           {score}
           <span className="text-ink-2">/100</span>
@@ -76,11 +76,9 @@ export function QuizResult({
   headingRef: Ref<HTMLHeadingElement>;
 }) {
   const profile = PROFILES[result.profile];
-  // Maestro : on montre quand même le pilier le plus bas comme piste.
-  const isMaestro = result.profile === "maestro";
-  const toWork: Pillar =
-    result.profile === "maestro" ? weakestPillar(result.pillars) : result.profile;
-  const best = strongestPillar(result.pillars, isMaestro ? undefined : toWork);
+  // Maestro : le pilier le plus bas reste la piste à travailler. Quand les
+  // quatre scores sont égaux, aucun pilier n'est présenté comme point fort.
+  const { strongest, toWork, even } = resultHighlights(result);
 
   return (
     <div>
@@ -94,7 +92,7 @@ export function QuizResult({
             id="profil"
             ref={headingRef}
             tabIndex={-1}
-            className="text-5xl leading-[0.9] font-extrabold uppercase font-stretch-75% text-balance focus:outline-none md:text-7xl"
+            className="text-5xl leading-[0.9] font-extrabold uppercase font-stretch-75% text-balance md:text-7xl"
           >
             <span className="sr-only">Ton profil : </span>
             {profile.name}
@@ -134,13 +132,13 @@ export function QuizResult({
       <div className="mt-12 grid gap-10 md:grid-cols-2 md:gap-12">
         <Verdict
           title="Point fort"
-          pillar={best}
-          score={result.pillars[best]}
+          label={even ? "Quatre piliers à égalité" : PILLAR_LABELS[strongest]}
+          score={result.pillars[strongest]}
           text={profile.strength}
         />
         <Verdict
           title="Point à travailler"
-          pillar={toWork}
+          label={PILLAR_LABELS[toWork]}
           score={result.pillars[toWork]}
           text={profile.focus}
         />

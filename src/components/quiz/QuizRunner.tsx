@@ -11,6 +11,7 @@ import {
 import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { QUESTIONS, SCALE } from "@/content/quiz";
 import {
+  FRESH_QUIZ,
   clearQuiz,
   isComplete,
   readQuiz,
@@ -91,7 +92,7 @@ function Quiz() {
 
   function restart() {
     clearQuiz();
-    go({ answers: {}, current: 0 });
+    go(FRESH_QUIZ);
   }
 
   return (
@@ -139,13 +140,8 @@ function QuestionStep({
   return (
     <div className="max-w-4xl">
       <div className="flex items-center gap-4">
-        <p className="font-mono text-sm text-ink-2">
-          <span className="sr-only">
-            Question {index + 1} sur {TOTAL}
-          </span>
-          <span aria-hidden>
-            <span className="text-ink">{pad(index + 1)}</span>/{TOTAL}
-          </span>
+        <p aria-hidden className="font-mono text-sm text-ink-2">
+          <span className="text-ink">{pad(index + 1)}</span>/{TOTAL}
         </p>
         <ol aria-hidden className="grid flex-1 grid-cols-12 gap-0.5">
           {QUESTIONS.map((q, i) => (
@@ -159,8 +155,12 @@ function QuestionStep({
           id="question"
           ref={headingRef}
           tabIndex={-1}
-          className="mt-6 min-h-[4.2em] max-w-[28ch] text-[1.75rem] leading-[1.05] font-bold font-stretch-85% text-balance focus:outline-none md:mt-12 md:min-h-[3.15em] md:text-5xl"
+          className="mt-6 min-h-[4.2em] max-w-[28ch] text-[1.75rem] leading-[1.05] font-bold font-stretch-85% text-balance md:mt-12 md:min-h-[3.15em] md:text-5xl"
         >
+          {/* Dans le titre : lu quand le focus arrive sur la question. */}
+          <span className="sr-only">
+            Question {index + 1} sur {TOTAL} :{" "}
+          </span>
           {question.text}
         </h2>
 

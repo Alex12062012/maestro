@@ -17,8 +17,11 @@ export type QuizState = { answers: Record<string, Answer>; current: number };
 
 export const QUIZ_KEY = "quiz";
 
-/** À ne pas modifier : toujours copier avant d'écrire dedans. */
-export const FRESH_QUIZ: QuizState = { answers: {}, current: 0 };
+/** Test vierge, figé : on le remplace, on ne l'écrit jamais. */
+export const FRESH_QUIZ: QuizState = Object.freeze({
+  answers: Object.freeze({}) as Record<string, Answer>,
+  current: 0,
+});
 
 const QUESTION_IDS = new Set(QUESTIONS.map((q) => q.id));
 
@@ -43,6 +46,21 @@ export function weakestPillar(pillars: Record<Pillar, number>): Pillar {
 export function strongestPillar(pillars: Record<Pillar, number>, exclude?: Pillar): Pillar {
   const candidates = PILLARS.filter((p) => p !== exclude);
   return candidates.reduce((high, p) => (pillars[p] > pillars[high] ? p : high));
+}
+
+/**
+ * Les deux blocs du résultat. `toWork` : le pilier du profil, ou le plus bas
+ * pour maestro. `strongest` : le plus haut des trois autres, jamais le même
+ * que `toWork`. `even` : les quatre scores sont égaux, aucun ne se détache.
+ */
+export function resultHighlights(result: QuizResult): {
+  strongest: Pillar;
+  toWork: Pillar;
+  even: boolean;
+} {
+  const toWork = result.profile === "maestro" ? weakestPillar(result.pillars) : result.profile;
+  const strongest = strongestPillar(result.pillars, toWork);
+  return { strongest, toWork, even: result.pillars[strongest] === result.pillars[toWork] };
 }
 
 /**
@@ -85,12 +103,11 @@ export function isComplete(state: QuizState): boolean {
  * version repart d'un test vierge au lieu de casser la page.
  */
 export function parseQuizState(raw: unknown): QuizState {
-  const fresh = (): QuizState => ({ answers: {}, current: 0 });
-  if (!isRecord(raw) || !isRecord(raw.answers)) return fresh();
+  if (!isRecord(raw) || !isRecord(raw.answers)) return FRESH_QUIZ;
 
   const answers: Record<string, Answer> = {};
   for (const [id, value] of Object.entries(raw.answers)) {
-    if (!QUESTION_IDS.has(id) || !isAnswer(value)) return fresh();
+    if (!QUESTION_IDS.has(id) || !isAnswer(value)) return FRESH_QUIZ;
     answers[id] = value;
   }
 
@@ -101,10 +118,10 @@ export function parseQuizState(raw: unknown): QuizState {
     current < 0 ||
     current > QUESTIONS.length
   ) {
-    return fresh();
+    return FRESH_QUIZ;
   }
   // Toutes les questions avant celle en cours doivent avoir une réponse.
-  if (QUESTIONS.slice(0, current).some((q) => answers[q.id] === undefined)) return fresh();
+  if (QUESTIONS.slice(0, current).some((q) => answers[q.id] === undefined)) return FRESH_QUIZ;
 
   return { answers, current };
 }

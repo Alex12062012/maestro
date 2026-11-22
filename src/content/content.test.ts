@@ -1,12 +1,18 @@
 import { describe, expect, it } from "vitest";
 import { EXERCISES, getExercise } from "@/content/exercises";
-import { DAYS, PHASES, PROGRAM, isValidWeek, sessionId } from "@/content/program";
+import { DAYS, PHASES, PROGRAM, PROGRAM_RULES, isValidWeek, sessionId } from "@/content/program";
 import { PILLARS, PROFILES, QUESTIONS } from "@/content/quiz";
 
 const slugs = EXERCISES.map((e) => e.slug);
 const sessions = PROGRAM.flatMap((w) => w.days.map((d) => ({ week: w.week, ...d })));
+const TEST_WEEKS = [1, 6, 12];
 const minutesOfWeek = (n: number) =>
   PROGRAM[n - 1].days.filter((d) => d.day !== "samedi").reduce((acc, d) => acc + d.minutes, 0);
+// Charge d'entraînement : sans le match du samedi ni les dimanches de tests.
+const trainingMinutes = (n: number) =>
+  PROGRAM[n - 1].days
+    .filter((d) => d.day !== "samedi" && !(d.day === "dimanche" && TEST_WEEKS.includes(n)))
+    .reduce((acc, d) => acc + d.minutes, 0);
 
 describe("PROGRAM", () => {
   it("12 semaines, de 1 à 12 dans l'ordre, 7 jours du lundi au dimanche", () => {
@@ -56,7 +62,7 @@ describe("PROGRAM", () => {
     for (const w of PROGRAM) {
       const dimanche = w.days.find((d) => d.day === "dimanche")!;
       expect(dimanche.exercises, `semaine ${w.week}`).toContain("retour-au-calme");
-      if ([1, 6, 12].includes(w.week)) {
+      if (TEST_WEEKS.includes(w.week)) {
         expect(dimanche.exercises).toEqual(
           expect.arrayContaining(["jongles", "slalom-plots", "sprints-courts", "frappes-cadrees"]),
         );
@@ -66,7 +72,7 @@ describe("PROGRAM", () => {
 
   it("échauffement en tête de chaque séance du lundi au jeudi et des dimanches de tests", () => {
     for (const s of sessions) {
-      const testSunday = s.day === "dimanche" && [1, 6, 12].includes(s.week);
+      const testSunday = s.day === "dimanche" && TEST_WEEKS.includes(s.week);
       if (["lundi", "mardi", "mercredi", "jeudi"].includes(s.day) || testSunday) {
         expect(s.exercises[0], sessionId(s.week, s.day)).toBe("echauffement-dynamique");
       }
@@ -80,6 +86,17 @@ describe("PROGRAM", () => {
     for (let n = 1; n <= 12; n++) {
       expect(minutesOfWeek(n), `semaine ${n}`).toBeLessThanOrEqual(minutesOfWeek(12));
     }
+  });
+
+  it("la charge d'entraînement ne baisse jamais d'une semaine à l'autre (hors samedi et dimanches de tests)", () => {
+    for (let n = 2; n <= 12; n++) {
+      expect(trainingMinutes(n), `semaine ${n} contre ${n - 1}`).toBeGreaterThanOrEqual(trainingMinutes(n - 1));
+    }
+  });
+
+  it("règles du programme : douleur, club, pas de match, tests décalés après un match dur", () => {
+    expect(PROGRAM_RULES.length).toBeGreaterThanOrEqual(4);
+    expect(PROGRAM_RULES.some((r) => /tests/i.test(r) && /match/i.test(r))).toBe(true);
   });
 });
 
@@ -143,7 +160,7 @@ describe("EXERCISES", () => {
 });
 
 describe("textes", () => {
-  const all = JSON.stringify({ EXERCISES, PROGRAM, PHASES, QUESTIONS, PROFILES });
+  const all = JSON.stringify({ EXERCISES, PROGRAM, PHASES, PROGRAM_RULES, QUESTIONS, PROFILES });
 
   it("aucun tiret cadratin ni demi-cadratin", () => {
     expect(all).not.toMatch(/[—–]/);

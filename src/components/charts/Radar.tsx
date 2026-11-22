@@ -1,7 +1,7 @@
 import { PILLARS, PILLAR_LABELS, type Pillar } from "@/content/quiz";
 
 // Radar 4 axes dessiné à la main, prévu pour un fond --surface-dark :
-// grille claire et discrète, forme en --blue, points en --signal.
+// grille claire et discrète, forme en --blue-on-dark, points en --signal.
 const W = 420;
 const H = 340;
 const CX = 210;
@@ -68,9 +68,9 @@ export function Radar({
       >
         <polygon
           points={shape}
-          fill="var(--blue)"
+          fill="var(--blue-on-dark)"
           fillOpacity="0.35"
-          stroke="var(--blue)"
+          stroke="var(--blue-on-dark)"
           strokeWidth="2.5"
           strokeLinejoin="round"
         />

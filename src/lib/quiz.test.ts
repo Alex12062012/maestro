@@ -1,12 +1,43 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { PILLARS, PROFILES, QUESTIONS, type Pillar } from "@/content/quiz";
 import {
   FRESH_QUIZ,
+  QUIZ_KEY,
+  clearQuiz,
+  isComplete,
   parseQuizState,
+  readQuiz,
+  readQuizResult,
+  resultHighlights,
   scoreQuiz,
   strongestPillar,
+  writeQuiz,
   type Answer,
+  type QuizResult,
 } from "@/lib/quiz";
+
+// localStorage en mémoire, même principe que src/lib/storage.test.ts.
+function memoryStorage(): Storage {
+  const data = new Map<string, string>();
+  return {
+    get length() {
+      return data.size;
+    },
+    clear: () => data.clear(),
+    getItem: (k) => data.get(k) ?? null,
+    key: (i) => [...data.keys()][i] ?? null,
+    removeItem: (k) => {
+      data.delete(k);
+    },
+    setItem: (k, v) => {
+      data.set(k, String(v));
+    },
+  };
+}
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 // Réponses qui donnent `good` (1 à 5) à chaque question d'un pilier, en
 // tenant compte des questions inversées.
@@ -151,5 +182,121 @@ describe("parseQuizState", () => {
     ["current en avance sur les réponses", { answers: firstTwo, current: 3 }],
   ])("repart de zéro si l'état est invalide (%s)", (_label, raw) => {
     expect(parseQuizState(raw)).toEqual(FRESH_QUIZ);
+  });
+});
+
+describe("FRESH_QUIZ", () => {
+  it("est figé, et c'est lui que renvoie un état invalide", () => {
+    expect(Object.isFrozen(FRESH_QUIZ)).toBe(true);
+    expect(Object.isFrozen(FRESH_QUIZ.answers)).toBe(true);
+    expect(parseQuizState(null)).toBe(FRESH_QUIZ);
+  });
+});
+
+describe("reprise et Recommencer (localStorage)", () => {
+  const mid = {
+    answers: { [QUESTIONS[0].id]: 4, [QUESTIONS[1].id]: 2, [QUESTIONS[2].id]: 5 },
+    current: 3,
+  } as const;
+  const done = { answers: allAnswers(3), current: 12 };
+
+  it("writeQuiz au milieu du test, puis readQuiz : on reprend au même endroit", () => {
+    const mem = memoryStorage();
+    vi.stubGlobal("localStorage", mem);
+
+    writeQuiz({ answers: { ...mid.answers }, current: mid.current });
+
+    expect(readQuiz()).toEqual(mid);
+    expect(mem.getItem(`maestro:v1:${QUIZ_KEY}`)).not.toBeNull();
+  });
+
+  it("clearQuiz, puis readQuiz : test vierge et clé effacée", () => {
+    const mem = memoryStorage();
+    vi.stubGlobal("localStorage", mem);
+    writeQuiz({ answers: { ...mid.answers }, current: mid.current });
+
+    clearQuiz();
+
+    expect(readQuiz()).toEqual(FRESH_QUIZ);
+    expect(mem.getItem(`maestro:v1:${QUIZ_KEY}`)).toBeNull();
+  });
+
+  it("test fini : isComplete vrai et readQuizResult renvoie le résultat", () => {
+    vi.stubGlobal("localStorage", memoryStorage());
+    writeQuiz(done);
+
+    expect(isComplete(readQuiz())).toBe(true);
+    expect(readQuizResult()).toEqual(scoreQuiz(done.answers));
+    expect(readQuizResult()?.profile).toBe("technique");
+  });
+
+  it("test pas fini : isComplete faux et readQuizResult renvoie null", () => {
+    vi.stubGlobal("localStorage", memoryStorage());
+    expect(readQuizResult()).toBeNull();
+
+    writeQuiz({ answers: { ...mid.answers }, current: mid.current });
+    expect(isComplete(readQuiz())).toBe(false);
+    expect(readQuizResult()).toBeNull();
+  });
+
+  it("valeur abîmée dans le stockage : test vierge", () => {
+    const mem = memoryStorage();
+    mem.setItem(`maestro:v1:${QUIZ_KEY}`, JSON.stringify({ answers: { controle: 9 }, current: 7 }));
+    vi.stubGlobal("localStorage", mem);
+
+    expect(readQuiz()).toEqual(FRESH_QUIZ);
+    expect(readQuizResult()).toBeNull();
+  });
+
+  it("localStorage bloqué : rien ne lance, le test repart de zéro", () => {
+    const fail = () => {
+      throw new DOMException("refusé", "SecurityError");
+    };
+    vi.stubGlobal("localStorage", {
+      length: 0,
+      clear: fail,
+      getItem: fail,
+      key: fail,
+      removeItem: fail,
+      setItem: fail,
+    });
+
+    expect(() => writeQuiz(done)).not.toThrow();
+    expect(() => clearQuiz()).not.toThrow();
+    expect(readQuiz()).toEqual(FRESH_QUIZ);
+    expect(readQuizResult()).toBeNull();
+  });
+});
+
+describe("resultHighlights", () => {
+  const result = (pillars: Record<Pillar, number>, profile: QuizResult["profile"]): QuizResult => ({
+    pillars,
+    total: 0,
+    profile,
+  });
+
+  it("profil de pilier : à travailler = ce pilier, point fort = le plus haut des autres", () => {
+    expect(
+      resultHighlights(result({ technique: 50, physique: 67, mental: 75, vision: 25 }, "vision")),
+    ).toEqual({ strongest: "mental", toWork: "vision", even: false });
+  });
+
+  it("maestro : à travailler = le pilier le plus bas", () => {
+    expect(
+      resultHighlights(result({ technique: 100, physique: 83, mental: 75, vision: 92 }, "maestro")),
+    ).toEqual({ strongest: "technique", toWork: "mental", even: false });
+  });
+
+  it("maestro à 100 partout : jamais le même pilier dans les deux blocs, égalité signalée", () => {
+    const h = resultHighlights(
+      result({ technique: 100, physique: 100, mental: 100, vision: 100 }, "maestro"),
+    );
+    expect(h.strongest).not.toBe(h.toWork);
+    expect(h.even).toBe(true);
+  });
+
+  it("tout à égalité sous 75 : égalité signalée", () => {
+    const h = resultHighlights(result({ technique: 25, physique: 25, mental: 25, vision: 25 }, "technique"));
+    expect(h).toEqual({ strongest: "physique", toWork: "technique", even: true });
   });
 });
