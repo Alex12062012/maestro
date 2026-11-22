@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react/ssr";
+import { ArrowRightIcon } from "@phosphor-icons/react/ssr";
 import { EducatorNote } from "@/components/EducatorNote";
+import { BackLink } from "@/components/nav/BackLink";
 import { ExercisePhoto } from "@/components/ExercisePhoto";
 import { DiagramLegend, TerrainDiagram } from "@/components/TerrainDiagram";
 import { EXERCISES, getExercise, type Exercise } from "@/content/exercises";
@@ -51,19 +52,12 @@ export default async function ExercisePage({ params }: PageProps<"/exercices/[sl
 
   return (
     <article className="mx-auto w-full max-w-6xl flex-1 px-5 pt-6 pb-20 md:px-8 md:pt-10 md:pb-28">
-      <nav aria-label="Fil d'Ariane" className="font-mono text-sm text-ink-2">
-        <Link href="/exercices" className="inline-flex h-11 items-center gap-2 hover:text-ink">
-          <ArrowLeftIcon size={16} weight="regular" aria-hidden />
-          Exercices
-        </Link>
-        <span aria-hidden className="mx-2">/</span>
-        <Link
-          href={`/exercices?pilier=${exercise.pillar}`}
-          className="inline-flex h-11 items-center hover:text-ink"
-        >
-          {PILLAR_LABELS[exercise.pillar]}
-        </Link>
-      </nav>
+      {/* Retour vers la page d'où vient le joueur (souvent sa semaine du
+          programme) ; lien direct ou nouvel onglet : la bibliothèque. */}
+      <BackLink
+        fallback="/exercices"
+        className="-ml-1 inline-flex h-11 items-center gap-2 px-1 font-mono text-sm text-ink-2 hover:text-ink"
+      />
 
       <div className="mt-4 grid gap-x-14 gap-y-10 md:mt-6 md:grid-cols-[minmax(0,1fr)_minmax(0,25rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)]">
         <header className="md:col-start-1">

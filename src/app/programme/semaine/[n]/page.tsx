@@ -3,11 +3,19 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeftIcon, ArrowRightIcon } from "@phosphor-icons/react/ssr";
 import { EducatorNote } from "@/components/EducatorNote";
-import { SessionCheck } from "@/components/program/SessionCheck";
+import { DayCheck, DayCount, ExerciseCheck } from "@/components/program/ProgressChecks";
 import { WeekProgress } from "@/components/program/WeekProgress";
 import { getExercise } from "@/content/exercises";
-import { PHASES, PROGRAM, TEST_WEEKS, parseWeekParam, type Session } from "@/content/program";
+import {
+  PHASES,
+  PROGRAM,
+  TEST_WEEKS,
+  parseWeekParam,
+  sessionId,
+  type Session,
+} from "@/content/program";
 import { PILLAR_LABELS } from "@/content/quiz";
+import { sessionRef } from "@/lib/progress";
 
 // Les 12 semaines sont prérendues au build : la navigation attend la page
 // statique, sans rendu serveur à la requête. Lire params en haut de page est
@@ -106,7 +114,11 @@ export default async function WeekPage({ params }: PageProps<"/programme/semaine
 
 function SessionBlock({ week, session }: { week: number; session: Session }) {
   const testDay = session.day === "dimanche" && TEST_WEEKS.includes(week);
-  const exercises = session.exercises.map((slug) => getExercise(slug)!);
+  const id = sessionId(week, session.day);
+  // Même liste que la progression : un exercice répété ne compte qu'une fois.
+  const { slugs } = sessionRef(id, session.exercises);
+  const exercises = slugs.map((slug) => getExercise(slug)!);
+  const muted = testDay ? "text-bg/60" : "text-ink-2";
 
   return (
     <article
@@ -117,8 +129,8 @@ function SessionBlock({ week, session }: { week: number; session: Session }) {
           : "border-t border-line py-7"
       }`}
     >
-      {/* Téléphone : jour et case sur la même ligne, contenu dessous.
-          Ordinateur : jour, contenu, case. Une seule case dans le DOM. */}
+      {/* Téléphone : jour et compteur, puis exercices, puis "Terminer la journée".
+          Ordinateur : jour, exercices, "Terminer la journée" sur une ligne. */}
       <div className="col-start-1 row-start-1">
         <h2
           id={`jour-${session.day}`}
@@ -131,31 +143,37 @@ function SessionBlock({ week, session }: { week: number; session: Session }) {
         </p>
       </div>
 
-      <div className="col-start-2 row-start-1 justify-self-end md:col-start-3">
-        <SessionCheck week={week} day={session.day} title={session.title} onDark={testDay} />
-      </div>
+      {slugs.length > 0 && (
+        <DayCount
+          session={id}
+          slugs={slugs}
+          className={`col-start-2 row-start-1 justify-self-end font-mono text-sm md:col-start-1 md:row-start-2 md:justify-self-start ${muted}`}
+        />
+      )}
 
-      <div className="col-span-2 row-start-2 md:col-span-1 md:col-start-2 md:row-start-1">
+      <div className="col-span-2 row-start-2 md:col-span-1 md:col-start-2 md:row-span-2 md:row-start-1">
         <h3 className="text-xl font-bold font-stretch-85%">{session.title}</h3>
-        <ul className="mt-3">
-          {exercises.map((e) => (
-            <li key={e.slug}>
-              <Link
-                href={`/exercices/${e.slug}`}
-                className={`group flex min-h-11 items-baseline justify-between gap-4 border-b py-2.5 ${
-                  testDay ? "border-bg/15" : "border-line"
-                }`}
+        {exercises.length > 0 && (
+          <ul role="list" className="mt-3">
+            {exercises.map((e) => (
+              <li
+                key={e.slug}
+                className={`flex items-center gap-1 border-b ${testDay ? "border-bg/15" : "border-line"}`}
               >
-                <span className="group-hover:underline">{e.name}</span>
-                <span
-                  className={`shrink-0 font-mono text-xs ${testDay ? "text-bg/60" : "text-ink-2"}`}
+                <ExerciseCheck session={id} slug={e.slug} name={e.name} onDark={testDay} />
+                <Link
+                  href={`/exercices/${e.slug}`}
+                  className="group flex min-h-11 flex-1 items-center justify-between gap-4 py-2"
                 >
-                  {PILLAR_LABELS[e.pillar]}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+                  <span className="group-hover:underline">{e.name}</span>
+                  <span className={`shrink-0 font-mono text-xs ${muted}`}>
+                    {PILLAR_LABELS[e.pillar]}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
 
         <div className="mt-5">
           <h4 className={`font-mono text-sm ${testDay ? "text-bg/70" : "text-ink-2"}`}>
@@ -175,6 +193,10 @@ function SessionBlock({ week, session }: { week: number; session: Session }) {
             <ArrowRightIcon size={18} weight="regular" aria-hidden />
           </Link>
         )}
+      </div>
+
+      <div className="col-span-2 row-start-3 md:col-span-1 md:col-start-3 md:row-start-1 md:justify-self-end">
+        <DayCheck session={id} day={session.day} onDark={testDay} />
       </div>
     </article>
   );

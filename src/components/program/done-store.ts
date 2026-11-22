@@ -1,25 +1,31 @@
 import { useSyncExternalStore } from "react";
-import { readDone, toggleSession, writeDone } from "@/lib/progress";
+import {
+  EMPTY_PROGRESS,
+  readProgress,
+  toggleDay,
+  toggleExercise,
+  writeProgress,
+  type Progress,
+} from "@/lib/progress";
 
-// Séances cochées, partagées entre tous les composants de la page (cases,
-// compteurs de semaine). Lues une fois dans le navigateur, puis gardées en
+// Progression (journées et exercices cochés), partagée entre tous les
+// composants de la page. Lue une fois dans le navigateur, puis gardée en
 // mémoire : si localStorage est bloqué, les cases marchent quand même pour la
 // visite en cours, la progression ne se garde juste pas.
 
-const EMPTY: string[] = [];
-let current: string[] | null = null;
-// Liste lue au chargement : tant que c'est elle, rien n'a changé pendant la visite.
-let firstRead: string[] | null = null;
+let current: Progress | null = null;
+// Progression lue au chargement : tant que c'est elle, rien n'a changé pendant la visite.
+let firstRead: Progress | null = null;
 const listeners = new Set<() => void>();
 
 function emit() {
   for (const listener of listeners) listener();
 }
 
-// Un autre onglet a coché une séance : on relit.
+// Un autre onglet a coché quelque chose : on relit les deux clés.
 function onStorage(e: StorageEvent) {
-  if (e.key !== null && !e.key.endsWith(":done")) return;
-  current = readDone();
+  if (e.key !== null && !e.key.endsWith(":done") && !e.key.endsWith(":done-ex")) return;
+  current = readProgress();
   emit();
 }
 
@@ -32,37 +38,48 @@ function subscribe(listener: () => void) {
   };
 }
 
-function getSnapshot(): string[] {
+function getSnapshot(): Progress {
   if (current === null) {
-    current = readDone();
+    current = readProgress();
     firstRead = current;
   }
   return current;
 }
 
 // Rendu serveur : rien de coché. Le navigateur prend le relais à l'hydratation.
-function getServerSnapshot(): string[] {
-  return EMPTY;
+function getServerSnapshot(): Progress {
+  return EMPTY_PROGRESS;
 }
 
-/** Exposé pour les tests ; les composants passent par useDone. */
+/** Exposé pour les tests ; les composants passent par useProgress. */
 export const doneStore = { subscribe, getSnapshot, getServerSnapshot };
 
-export function useDone(): string[] {
+export function useProgress(): Progress {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
 
-export function toggleDone(id: string): void {
-  current = toggleSession(getSnapshot(), id);
-  writeDone(current);
+function update(next: Progress) {
+  if (next === current) return;
+  current = next;
+  writeProgress(next);
   emit();
 }
 
+/** Case d'un exercice ; la journée suit. */
+export function toggleExerciseDone(session: string, slug: string): void {
+  update(toggleExercise(getSnapshot(), session, slug));
+}
+
+/** "Terminer la journée" : tout cocher, ou tout décocher si elle était faite. */
+export function toggleDayDone(session: string): void {
+  update(toggleDay(getSnapshot(), session));
+}
+
 /**
- * Vrai si la liste vient d'un changement pendant la visite (case cochée ici
- * ou dans un autre onglet), faux pour l'état lu au chargement. Sert à ne pas
- * annoncer "Semaine terminée" à l'arrivée sur la page.
+ * Vrai si la progression vient d'un changement pendant la visite (case cochée
+ * ici ou dans un autre onglet), faux pour l'état lu au chargement. Sert à ne
+ * pas annoncer "Semaine terminée" à l'arrivée sur la page.
  */
-export function changedThisVisit(snapshot: string[]): boolean {
-  return snapshot !== EMPTY && snapshot !== firstRead;
+export function changedThisVisit(snapshot: Progress): boolean {
+  return snapshot !== EMPTY_PROGRESS && snapshot !== firstRead;
 }

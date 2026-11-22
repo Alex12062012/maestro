@@ -2,9 +2,9 @@
 
 import { DAYS, PROGRAM, sessionId } from "@/content/program";
 import { weekProgress } from "@/lib/progress";
-import { changedThisVisit, useDone } from "@/components/program/done-store";
+import { changedThisVisit, useProgress } from "@/components/program/done-store";
 
-// Avancement d'une semaine : "3/7" en mono et une tige par jour.
+// Avancement d'une semaine : "3/7" journées faites en mono et une tige par jour.
 // `large` : en-tête de la page semaine, avec un message quand tout est fait.
 export function WeekProgress({
   week,
@@ -15,7 +15,8 @@ export function WeekProgress({
   large?: boolean;
   className?: string;
 }) {
-  const done = useDone();
+  const progress = useProgress();
+  const done = progress.days;
   const count = weekProgress(done, week);
   const message =
     count < 7
@@ -25,7 +26,7 @@ export function WeekProgress({
         : "Semaine 12 terminée : tu as fait tout le programme.";
   // Annoncé seulement après une case cochée pendant la visite, pas à
   // l'arrivée sur une semaine déjà finie (le texte reste visible).
-  const live = changedThisVisit(done);
+  const live = changedThisVisit(progress);
 
   return (
     <div className={className}>
