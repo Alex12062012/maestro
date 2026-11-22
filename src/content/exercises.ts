@@ -312,10 +312,11 @@ export const EXERCISES: Exercise[] = [
     goal: "Enchaîner conduite, feinte et frappe comme dans une action de match, en gardant un geste propre quand le souffle est court.",
     steps: [
       "Installe 3 postes à la suite : les 6 plots du slalom, un plot défenseur avec une porte derrière lui, puis le but (ou tes deux plots poteaux) à 16 mètres.",
+      "Prends 2 ballons. Le premier fait tout le parcours, le second t'attend au point de frappe. Avec un seul ballon, va le chercher en trottinant après la première frappe.",
       "Poste 1 : un aller-retour en slalom, comme dans la fiche Slalom 6 plots.",
       "Poste 2 : 2 passages feinte et accélération, un de chaque côté.",
       "Poste 3 : 2 frappes cadrées, une de chaque pied, avec ta routine avant chaque frappe.",
-      "Un tour, ce sont les 3 postes à la suite, sans pause. Entre deux tours, tu récupères 2 minutes en marchant.",
+      "Un tour, ce sont les 3 postes à la suite, sans pause. Entre deux tours, tu récupères 2 minutes en marchant, le temps de ramasser les ballons et de revenir au départ.",
     ],
     dose: "Semaine 10 : 4 tours. Semaines 11 et 12 : 5 tours. 2 minutes de récupération en marchant entre deux tours.",
     mistakes: [

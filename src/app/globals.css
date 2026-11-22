@@ -39,7 +39,6 @@
   --color-line: var(--line);
   --color-signal: var(--signal);
   --color-blue: var(--blue);
-  --color-blue-on-dark: var(--blue-on-dark);
 
   /* Les variantes nommées pointent sur le même rayon. */
   --radius-xs: var(--radius);
@@ -84,8 +83,9 @@ body {
 }
 
 /* Titres qui reçoivent le focus par script (tabIndex -1, ex. le test) :
-   ils ne sont pas interactifs, pas de contour. */
-[tabindex="-1"]:focus-visible {
+   ils ne sont pas interactifs, pas de contour. Limité aux titres : tout
+   autre élément focalisable garde son contour. */
+:is(h1, h2, h3, h4)[tabindex="-1"]:focus-visible {
   outline: none;
 }
 

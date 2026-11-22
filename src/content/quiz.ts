@@ -112,8 +112,10 @@ export type Profile = {
   focus: string;
 };
 
-// Un profil de pilier veut dire : c'est ton score le plus bas. Les textes ne
-// prétendent rien sur les autres piliers, sauf qu'ils sont au-dessus.
+// Un profil de pilier veut dire : c'est ton score le plus bas (à égalité, le
+// premier dans l'ordre de PILLARS). Les textes ne prétendent rien sur les
+// autres piliers, sauf qu'ils sont au moins à ce niveau. Maestro : les quatre
+// piliers à 75 ou plus.
 export const PROFILES: Record<ProfileId, Profile> = {
   maestro: {
     name: "Le Maestro",
