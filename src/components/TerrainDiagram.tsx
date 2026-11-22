@@ -37,9 +37,9 @@ function headPoints(from: Point, to: Point): string {
   ].join(" ");
 }
 
-function strokePath(from: Point, to: Point, kind: Kind): string {
+function strokePath(from: Point, to: Point, kind: Kind, head = true): string {
   const { ux, uy, len } = axis(from, to);
-  const end = Math.max(0, len - HEAD * 0.8); // le trait s'arrête sous la pointe
+  const end = head ? Math.max(0, len - HEAD * 0.8) : len; // le trait s'arrête sous la pointe
   if (kind !== "dribble") return `M${pt(...from)}L${along(from, ux, uy, end)}`;
 
   // Conduite : demi-ondes de 2 unités environ, puis un bout droit avant la pointe.
@@ -163,19 +163,32 @@ export function TerrainDiagram({
       )}
 
       <g fill="var(--blue)" stroke="var(--blue)">
-        {paths.map((p, i) => (
-          <g key={i} mask={animate ? `url(#${id}-m${i})` : undefined}>
-            <path
-              d={strokePath(p.from, p.to, p.kind)}
-              fill="none"
-              strokeWidth={0.55 * w}
-              strokeDasharray={p.kind === "run" ? `${1.6 * w} ${1.2 * w}` : undefined}
-              strokeLinecap={p.kind === "run" ? "butt" : "round"}
-              strokeLinejoin="round"
-            />
-            <polygon points={headPoints(p.from, p.to)} stroke="none" />
-          </g>
-        ))}
+        {paths.map((p, i) => {
+          // Une conduite ou une course qui se poursuit dans le trajet suivant
+          // (même geste, même point) ne porte pas de pointe : la flèche est au
+          // bout de l'enchaînement. Les passes gardent la leur à chaque rebond.
+          const nextPath = paths[i + 1];
+          const head = !(
+            p.kind !== "pass" &&
+            nextPath &&
+            nextPath.kind === p.kind &&
+            nextPath.from[0] === p.to[0] &&
+            nextPath.from[1] === p.to[1]
+          );
+          return (
+            <g key={i} mask={animate ? `url(#${id}-m${i})` : undefined}>
+              <path
+                d={strokePath(p.from, p.to, p.kind, head)}
+                fill="none"
+                strokeWidth={0.55 * w}
+                strokeDasharray={p.kind === "run" ? `${1.6 * w} ${1.2 * w}` : undefined}
+                strokeLinecap={p.kind === "run" ? "butt" : "round"}
+                strokeLinejoin="round"
+              />
+              {head && <polygon points={headPoints(p.from, p.to)} stroke="none" />}
+            </g>
+          );
+        })}
       </g>
 
       <g fill="var(--ink-2)">

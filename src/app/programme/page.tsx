@@ -25,7 +25,7 @@ function trainingMinutes(week: number): number {
 export default function ProgrammePage() {
   return (
     <div className="mx-auto w-full max-w-6xl flex-1 px-5 pt-8 pb-20 md:px-8 md:pt-14 md:pb-28">
-      <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] md:items-end md:gap-14">
+      <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] md:items-start md:gap-14">
         <div>
           <h1 className="text-5xl leading-[0.9] font-extrabold uppercase font-stretch-75% md:text-7xl">
             Programme

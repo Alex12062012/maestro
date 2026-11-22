@@ -3,6 +3,7 @@ import { join } from "node:path";
 import sharp from "sharp";
 import { describe, expect, it } from "vitest";
 import { EXERCISES, getExercise } from "@/content/exercises";
+import { BENCHMARKS } from "@/content/benchmarks";
 import { PHOTOS } from "@/content/photos";
 import { DAYS, PHASES, PROGRAM, PROGRAM_RULES, isValidWeek, sessionId } from "@/content/program";
 import { PILLARS, PROFILES, QUESTIONS } from "@/content/quiz";
@@ -186,7 +187,16 @@ describe("PHOTOS", () => {
 });
 
 describe("textes", () => {
-  const all = JSON.stringify({ EXERCISES, PROGRAM, PHASES, PROGRAM_RULES, QUESTIONS, PROFILES, PHOTOS });
+  const all = JSON.stringify({
+    EXERCISES,
+    PROGRAM,
+    PHASES,
+    PROGRAM_RULES,
+    QUESTIONS,
+    PROFILES,
+    PHOTOS,
+    BENCHMARKS,
+  });
 
   it("aucun tiret cadratin ni demi-cadratin", () => {
     expect(all).not.toMatch(/[—–]/);

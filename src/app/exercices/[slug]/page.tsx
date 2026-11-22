@@ -160,7 +160,7 @@ export default async function ExercisePage({ params }: PageProps<"/exercices/[sl
                       {pad(week)}
                     </Link>
                   ) : (
-                    <span className="flex h-11 items-center justify-center rounded border border-line font-mono text-sm text-ink-2/60">
+                    <span className="flex h-11 items-center justify-center rounded border border-line font-mono text-sm text-ink-2">
                       <span className="sr-only">Semaine {week} : pas au programme</span>
                       <span aria-hidden>{pad(week)}</span>
                     </span>
@@ -214,7 +214,7 @@ function Visual({ exercise }: { exercise: Exercise }) {
       src={exercise.photo}
       meta={meta}
       sizes="(min-width: 1024px) 448px, (min-width: 768px) 400px, 100vw"
-      priority
+      eager
       caption={`Photo ${meta.credit}, Pexels`}
       className="h-auto w-full rounded bg-line object-cover md:max-h-[58vh]"
     />

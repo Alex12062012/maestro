@@ -13,7 +13,7 @@ export function ExercisePhoto({
   sizes,
   className,
   fallback = null,
-  priority = false,
+  eager = false,
   caption,
 }: {
   src: string;
@@ -21,7 +21,8 @@ export function ExercisePhoto({
   sizes: string;
   className?: string;
   fallback?: ReactNode;
-  priority?: boolean;
+  /** Photo vue dès l'arrivée sur la page : chargée tout de suite. */
+  eager?: boolean;
   /** Légende : la photo est alors rendue dans un <figure>, retiré avec elle. */
   caption?: ReactNode;
 }) {
@@ -34,7 +35,8 @@ export function ExercisePhoto({
       height={meta.height}
       alt={meta.alt}
       sizes={sizes}
-      priority={priority}
+      loading={eager ? "eager" : "lazy"}
+      fetchPriority={eager ? "high" : undefined}
       onError={() => setFailed(true)}
       className={className}
     />
