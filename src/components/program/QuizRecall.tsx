@@ -18,7 +18,10 @@ export function QuizRecall({ className }: { className?: string }) {
   );
   const result = hydrated ? readQuizResult() : null;
 
-  const frame = `on-dark rounded bg-surface-dark p-6 text-bg md:p-8 ${className ?? ""}`;
+  // Même hauteur minimale pour l'invitation (HTML statique) et le profil
+  // (navigateur) : le passage de l'un à l'autre ne décale pas la page.
+  // 24rem couvre le profil le plus long, mesuré à 375 et 1440 px.
+  const frame = `on-dark flex min-h-[24rem] flex-col rounded bg-surface-dark p-6 text-bg md:p-8 ${className ?? ""}`;
 
   if (!result) {
     return (
@@ -26,13 +29,13 @@ export function QuizRecall({ className }: { className?: string }) {
         <h2 id="profil" className="text-2xl leading-tight font-bold font-stretch-85%">
           Pas encore de profil
         </h2>
-        <p className="mt-3 max-w-[44ch] leading-relaxed text-bg/80">
+        <p className="mt-3 mb-6 max-w-[44ch] leading-relaxed text-bg/80">
           Le test Maestro te dit quel pilier travailler en premier : 12 questions, une par écran.
           Ton résultat reste dans ce navigateur.
         </p>
         <Link
           href="/test"
-          className="mt-6 inline-flex h-12 items-center gap-2 rounded bg-bg px-6 font-semibold text-ink transition-transform duration-150 hover:bg-bg/85 active:scale-[0.98]"
+          className="mt-auto inline-flex h-12 items-center gap-2 self-start rounded bg-bg px-6 font-semibold text-ink transition-transform duration-150 hover:bg-bg/85 active:scale-[0.98]"
         >
           Faire le test
           <ArrowRightIcon size={18} weight="regular" aria-hidden />
@@ -59,12 +62,14 @@ export function QuizRecall({ className }: { className?: string }) {
         </span>
       </p>
       <p className="mt-3 max-w-[48ch] leading-relaxed text-bg/80">{profile.focus}</p>
-      <Link
-        href="/test"
-        className="mt-5 inline-flex h-11 items-center text-[0.9375rem] text-bg/80 underline decoration-bg/30 hover:text-bg hover:decoration-signal"
-      >
-        Revoir le résultat du test
-      </Link>
+      <div className="mt-auto pt-5">
+        <Link
+          href="/test"
+          className="inline-flex h-11 items-center text-[0.9375rem] text-bg/80 underline decoration-bg/30 hover:text-bg hover:decoration-signal"
+        >
+          Revoir le résultat du test
+        </Link>
+      </div>
     </section>
   );
 }

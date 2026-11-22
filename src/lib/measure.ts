@@ -7,6 +7,9 @@ export const CHECKPOINTS = ["w1", "w6", "w12"] as const;
 export type Checkpoint = (typeof CHECKPOINTS)[number];
 export type Measures = Record<Checkpoint, Record<string, number>>;
 
+/** Semaine du programme de chaque relevé (les dimanches de tests). */
+export const WEEK_OF: Record<Checkpoint, number> = { w1: 1, w6: 6, w12: 12 };
+
 export const MEASURES_KEY = "measures";
 
 export type ParsedMeasure = { ok: true; value: number } | { ok: false; error: string };
@@ -14,12 +17,20 @@ export type ParsedMeasure = { ok: true; value: number } | { ok: false; error: st
 // Chiffres, avec au plus une partie décimale après une virgule ou un point.
 const NUMBER = /^\d+(?:[.,]\d+)?$/;
 
+// Au-delà, c'est une faute de frappe (ou un nombre que JavaScript lit Infinity).
+const MAX: Record<Unit, number> = { s: 120, reps: 10000, "/10": 10 };
+const MAX_ERROR: Record<Unit, string> = {
+  s: "120 secondes au maximum : vérifie ton chrono.",
+  reps: "10 000 au maximum : vérifie ton compte.",
+  "/10": "La note va de 0 à 10.",
+};
+
 const fail = (error: string): ParsedMeasure => ({ ok: false, error });
 
 /**
  * Lit ce que le joueur a tapé. Virgule ou point décimal acceptés. Refuse le
  * vide, le négatif et le texte. Jongles et notes /10 en nombres entiers,
- * notes bornées de 0 à 10, temps plus grands que 0.
+ * notes de 0 à 10, jongles jusqu'à 10 000, temps de 0,01 à 120 secondes.
  */
 export function parseMeasure(raw: string, unit: Unit): ParsedMeasure {
   const text = raw.trim();
@@ -34,8 +45,12 @@ export function parseMeasure(raw: string, unit: Unit): ParsedMeasure {
   }
 
   const value = Number(text.replace(",", "."));
+  if (!Number.isFinite(value) || value > MAX[unit]) return fail(MAX_ERROR[unit]);
   if (unit === "s") {
-    return value > 0 ? { ok: true, value } : fail("Un temps doit être plus grand que 0.");
+    // Affiché au centième : 0,001 deviendrait 0.
+    return Math.round(value * 100) > 0
+      ? { ok: true, value }
+      : fail("Un temps doit être plus grand que 0.");
   }
   if (!Number.isInteger(value)) {
     return fail(
@@ -44,8 +59,33 @@ export function parseMeasure(raw: string, unit: Unit): ParsedMeasure {
         : "La note est un nombre entier, de 0 à 10.",
     );
   }
-  if (unit === "/10" && value > 10) return fail("La note va de 0 à 10.");
   return { ok: true, value };
+}
+
+export type WeekEntry =
+  | { ok: true; values: Record<string, number> }
+  | { ok: false; errors: Record<string, string>; form?: string };
+
+/**
+ * Relevé d'une semaine, champ par champ. Une case vide veut dire "pas mesuré
+ * cette fois" : elle ne bloque rien. Une case remplie doit passer
+ * parseMeasure. Sans aucune case remplie, il n'y a rien à enregistrer.
+ */
+export function parseWeekEntry(drafts: Record<string, string>): WeekEntry {
+  const values: Record<string, number> = {};
+  const errors: Record<string, string> = {};
+  for (const b of BENCHMARKS) {
+    const raw = drafts[b.id] ?? "";
+    if (raw.trim() === "") continue;
+    const r = parseMeasure(raw, b.unit);
+    if (r.ok) values[b.id] = r.value;
+    else errors[b.id] = r.error;
+  }
+  if (Object.keys(errors).length > 0) return { ok: false, errors };
+  if (Object.keys(values).length === 0) {
+    return { ok: false, errors, form: "Entre au moins un résultat avant d'enregistrer la semaine." };
+  }
+  return { ok: true, values };
 }
 
 /**

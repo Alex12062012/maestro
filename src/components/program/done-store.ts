@@ -8,6 +8,8 @@ import { readDone, toggleSession, writeDone } from "@/lib/progress";
 
 const EMPTY: string[] = [];
 let current: string[] | null = null;
+// Liste lue au chargement : tant que c'est elle, rien n'a changé pendant la visite.
+let firstRead: string[] | null = null;
 const listeners = new Set<() => void>();
 
 function emit() {
@@ -31,7 +33,10 @@ function subscribe(listener: () => void) {
 }
 
 function getSnapshot(): string[] {
-  current ??= readDone();
+  if (current === null) {
+    current = readDone();
+    firstRead = current;
+  }
   return current;
 }
 
@@ -39,6 +44,9 @@ function getSnapshot(): string[] {
 function getServerSnapshot(): string[] {
   return EMPTY;
 }
+
+/** Exposé pour les tests ; les composants passent par useDone. */
+export const doneStore = { subscribe, getSnapshot, getServerSnapshot };
 
 export function useDone(): string[] {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
@@ -48,4 +56,13 @@ export function toggleDone(id: string): void {
   current = toggleSession(getSnapshot(), id);
   writeDone(current);
   emit();
+}
+
+/**
+ * Vrai si la liste vient d'un changement pendant la visite (case cochée ici
+ * ou dans un autre onglet), faux pour l'état lu au chargement. Sert à ne pas
+ * annoncer "Semaine terminée" à l'arrivée sur la page.
+ */
+export function changedThisVisit(snapshot: string[]): boolean {
+  return snapshot !== EMPTY && snapshot !== firstRead;
 }

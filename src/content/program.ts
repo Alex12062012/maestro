@@ -53,7 +53,7 @@ export const PHASES: Phase[] = [
 /** À lire avant de commencer : ce qui passe avant le programme. */
 export const PROGRAM_RULES: string[] = [
   "Une douleur qui dure ou qui augmente pendant un exercice : tu arrêtes et tu en parles à un adulte.",
-  "Tests des semaines 1, 6 et 12 : ils sont prévus le dimanche. Si le match de la veille a été dur, ou si tu joues le dimanche, fais-les à la place de la séance du premier jour où tes jambes sont fraîches, au plus tard le mardi. Jamais avec les jambes lourdes.",
+  "Tests des semaines 1, 6 et 12 : ils sont prévus le dimanche. Si le match de la veille a été dur, ou si tu joues le dimanche, fais-les à la place de la séance du premier jour où tes jambes sont fraîches. Si elles sont encore lourdes le mardi, fais les autres tests et saute le sprint cette semaine-là.",
   "Prends un carnet, un cahier ou les notes de ton téléphone. Tu y écris tes bilans de match, ta confiance sur 10 et tes records de jongles. Les résultats des tests vont dans la page Suivi.",
   "Jour d'entraînement au club : la séance du club remplace celle du programme. Garde seulement la routine mentale du jour.",
   "Pas de match samedi : 20 minutes de jeu avec des copains, avec la routine d'avant-match et le bilan après.",
@@ -292,8 +292,17 @@ export const PROGRAM: Week[] = [
   },
 ];
 
+/** Semaines qui finissent par les tests de référence (dimanche). */
+export const TEST_WEEKS: readonly number[] = [1, 6, 12];
+
 export function isValidWeek(n: number): boolean {
   return Number.isInteger(n) && n >= 1 && n <= PROGRAM.length;
+}
+
+/** Segment d'URL de /programme/semaine/[n] : "3" donne 3 ; "03", "3.0", "13" ou "abc" donnent null. */
+export function parseWeekParam(n: string): number | null {
+  const week = Number(n);
+  return String(week) === n && isValidWeek(week) ? week : null;
 }
 
 /** Identifiant stable d'une séance, ex. "w3-mardi" (clé de la progression). */

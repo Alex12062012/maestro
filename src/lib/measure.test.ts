@@ -1,6 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { BENCHMARKS } from "@/content/benchmarks";
-import { delta, parseMeasure, parseMeasures, readMeasures, writeMeasures } from "@/lib/measure";
+import {
+  WEEK_OF,
+  delta,
+  parseMeasure,
+  parseMeasures,
+  parseWeekEntry,
+  readMeasures,
+  writeMeasures,
+} from "@/lib/measure";
 
 describe("BENCHMARKS", () => {
   it("les 6 tests de référence, dans l'ordre, avec leur unité et leur sens", () => {
@@ -55,12 +63,80 @@ describe("parseMeasure", () => {
     expect(parseMeasure("0,0", "s").ok).toBe(false);
   });
 
+  it("bornes plausibles : 120 s et 10 000 jongles au plus", () => {
+    expect(parseMeasure("120", "s")).toEqual({ ok: true, value: 120 });
+    expect(parseMeasure("120,5", "s").ok).toBe(false);
+    expect(parseMeasure("10000", "reps")).toEqual({ ok: true, value: 10000 });
+    expect(parseMeasure("10001", "reps").ok).toBe(false);
+  });
+
+  it("refuse un temps qui s'arrondit à 0 et les nombres trop grands pour être lus", () => {
+    expect(parseMeasure("0,001", "s").ok).toBe(false);
+    expect(parseMeasure("0,01", "s")).toEqual({ ok: true, value: 0.01 });
+    const huge = "1" + "0".repeat(400);
+    expect(parseMeasure(huge, "s").ok).toBe(false);
+    expect(parseMeasure(huge, "reps").ok).toBe(false);
+    expect(parseMeasure(huge, "/10").ok).toBe(false);
+  });
+
   it("vide, négatif et texte ont des messages différents", () => {
     const messages = ["", "-2", "abc"].map((raw) => {
       const r = parseMeasure(raw, "s");
       return r.ok ? "" : r.error;
     });
     expect(new Set(messages).size).toBe(3);
+  });
+});
+
+describe("parseWeekEntry (enregistrer une semaine)", () => {
+  const blank = {
+    "jongles-droit": "",
+    "jongles-gauche": "",
+    slalom: "",
+    "sprint-20": "",
+    finition: "",
+    confiance: "",
+  };
+
+  it("une case vide veut dire pas mesuré : la semaine s'enregistre sans elle", () => {
+    expect(parseWeekEntry({ ...blank, slalom: "14,2", confiance: " 6 " })).toEqual({
+      ok: true,
+      values: { slalom: 14.2, confiance: 6 },
+    });
+  });
+
+  it("une case remplie mais invalide bloque l'enregistrement, avec son message", () => {
+    const r = parseWeekEntry({ ...blank, slalom: "abc", "sprint-20": "-2", confiance: "7" });
+    expect(r.ok).toBe(false);
+    if (!r.ok) {
+      expect(Object.keys(r.errors).sort()).toEqual(["slalom", "sprint-20"]);
+      expect(r.errors.slalom.trim()).not.toBe("");
+    }
+  });
+
+  it("aucune case remplie : rien à enregistrer, message général", () => {
+    const r = parseWeekEntry(blank);
+    expect(r.ok).toBe(false);
+    if (!r.ok) {
+      expect(r.errors).toEqual({});
+      expect(r.form?.trim()).toBeTruthy();
+    }
+    expect(parseWeekEntry({}).ok).toBe(false);
+  });
+
+  it("virgule acceptée, 11 en /10 et 12.5 jongles refusés", () => {
+    expect(parseWeekEntry({ ...blank, "sprint-20": "3,4" })).toEqual({
+      ok: true,
+      values: { "sprint-20": 3.4 },
+    });
+    expect(parseWeekEntry({ ...blank, finition: "11" }).ok).toBe(false);
+    expect(parseWeekEntry({ ...blank, "jongles-droit": "12.5" }).ok).toBe(false);
+  });
+});
+
+describe("WEEK_OF", () => {
+  it("relie chaque relevé à sa semaine du programme", () => {
+    expect(WEEK_OF).toEqual({ w1: 1, w6: 6, w12: 12 });
   });
 });
 

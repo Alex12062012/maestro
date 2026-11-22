@@ -6,7 +6,7 @@ import { EducatorNote } from "@/components/EducatorNote";
 import { SessionCheck } from "@/components/program/SessionCheck";
 import { WeekProgress } from "@/components/program/WeekProgress";
 import { getExercise } from "@/content/exercises";
-import { PHASES, PROGRAM, isValidWeek, type Session } from "@/content/program";
+import { PHASES, PROGRAM, TEST_WEEKS, parseWeekParam, type Session } from "@/content/program";
 import { PILLAR_LABELS } from "@/content/quiz";
 
 // Les 12 semaines sont prérendues au build : la navigation attend la page
@@ -18,16 +18,10 @@ export function generateStaticParams() {
   return PROGRAM.map((w) => ({ n: String(w.week) }));
 }
 
-/** "3" donne 3 ; "03", "3.0", "13" ou "abc" donnent null (page 404). */
-function parseWeek(n: string): number | null {
-  const week = Number(n);
-  return String(week) === n && isValidWeek(week) ? week : null;
-}
-
 export async function generateMetadata({
   params,
 }: PageProps<"/programme/semaine/[n]">): Promise<Metadata> {
-  const week = parseWeek((await params).n);
+  const week = parseWeekParam((await params).n);
   if (week === null) return {};
   return {
     title: `Semaine ${week} - Programme MAESTRO`,
@@ -35,10 +29,8 @@ export async function generateMetadata({
   };
 }
 
-const TEST_WEEKS = new Set([1, 6, 12]);
-
 export default async function WeekPage({ params }: PageProps<"/programme/semaine/[n]">) {
-  const week = parseWeek((await params).n);
+  const week = parseWeekParam((await params).n);
   if (week === null) notFound();
 
   const { days } = PROGRAM[week - 1];
@@ -73,7 +65,7 @@ export default async function WeekPage({ params }: PageProps<"/programme/semaine
         </Link>
       </p>
 
-      <ol className="mt-10 md:mt-14">
+      <ol role="list" className="mt-10 md:mt-14">
         {days.map((session) => (
           <li key={session.day}>
             <SessionBlock week={week} session={session} />
@@ -113,7 +105,7 @@ export default async function WeekPage({ params }: PageProps<"/programme/semaine
 }
 
 function SessionBlock({ week, session }: { week: number; session: Session }) {
-  const testDay = session.day === "dimanche" && TEST_WEEKS.has(week);
+  const testDay = session.day === "dimanche" && TEST_WEEKS.includes(week);
   const exercises = session.exercises.map((slug) => getExercise(slug)!);
 
   return (

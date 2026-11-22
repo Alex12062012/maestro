@@ -21,9 +21,9 @@ import {
   type QuizState,
 } from "@/lib/quiz";
 import { QuizResult } from "@/components/quiz/QuizResult";
+import { pad2 } from "@/lib/format";
 
 const TOTAL = QUESTIONS.length;
-const pad = (n: number) => String(n).padStart(2, "0");
 
 const noSubscribe = () => () => {};
 const noop = () => {};
@@ -141,7 +141,7 @@ function QuestionStep({
     <div className="max-w-4xl">
       <div className="flex items-center gap-4">
         <p aria-hidden className="font-mono text-sm text-ink-2">
-          <span className="text-ink">{pad(index + 1)}</span>/{TOTAL}
+          <span className="text-ink">{pad2(index + 1)}</span>/{TOTAL}
         </p>
         <ol aria-hidden className="grid flex-1 grid-cols-12 gap-0.5">
           {QUESTIONS.map((q, i) => (

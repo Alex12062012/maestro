@@ -10,7 +10,7 @@ export type Diagram = {
   cones: Point[];
   ball?: Point;
   player?: Point;
-  paths: { from: Point; to: Point; kind: "run" | "pass" | "dribble" }[];
+  paths: { from: Point; to: Point; kind: "run" | "pass" | "dribble" | "jump" }[];
   /** Le bord haut (y = 0) est un mur. */
   wall?: boolean;
   /** Ligne tracée au sol ou bâton posé par terre. */
@@ -521,8 +521,8 @@ export const EXERCISES: Exercise[] = [
       ],
       player: [42, 30],
       paths: [
-        { from: [43, 25], to: [57, 25], kind: "run" },
-        { from: [57, 35], to: [43, 35], kind: "run" },
+        { from: [43, 27], to: [57, 27], kind: "jump" },
+        { from: [57, 33], to: [43, 33], kind: "jump" },
       ],
     },
   },

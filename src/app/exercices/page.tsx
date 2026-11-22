@@ -5,6 +5,7 @@ import { TerrainDiagram } from "@/components/TerrainDiagram";
 import { EXERCISES, type Exercise } from "@/content/exercises";
 import { PHOTOS } from "@/content/photos";
 import { PILLARS, PILLAR_LABELS, type Pillar } from "@/content/quiz";
+import { pad2 } from "@/lib/format";
 
 // Le filtre vit dans l'URL (?pilier=mental) et doit marcher sans JavaScript :
 // la liste filtrée est rendue sur le serveur à chaque requête. Avec Cache
@@ -15,8 +16,7 @@ export const instant = false;
 
 export const metadata: Metadata = {
   title: "Exercices - MAESTRO",
-  description:
-    "34 fiches d'exercices de foot pour les 13-14 ans, au poids du corps, avec un ballon et quelques plots : technique, physique, mental et vision.",
+  description: `${EXERCISES.length} fiches d'exercices de foot pour les 13-14 ans, au poids du corps, avec un ballon et quelques plots : technique, physique, mental et vision.`,
 };
 
 const INTRO: Record<Pillar, string> = {
@@ -31,7 +31,6 @@ function parsePillar(raw: string | string[] | undefined): Pillar | null {
   return PILLARS.find((p) => p === value) ?? null;
 }
 
-const pad = (n: number) => String(n).padStart(2, "0");
 const byPillar = (p: Pillar) => EXERCISES.filter((e) => e.pillar === p);
 
 export default async function ExercisesPage({ searchParams }: PageProps<"/exercices">) {
@@ -75,7 +74,7 @@ export default async function ExercisesPage({ searchParams }: PageProps<"/exerci
                 {PILLAR_LABELS[p]}
               </h2>
               <p className="font-mono text-sm text-ink-2">
-                <span className="text-ink">{pad(list.length)}</span> fiches
+                <span className="text-ink">{pad2(list.length)}</span> fiches
               </p>
             </div>
             <p className="mt-4 max-w-[60ch] text-ink-2">{INTRO[p]}</p>

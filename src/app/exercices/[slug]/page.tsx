@@ -9,6 +9,7 @@ import { EXERCISES, getExercise, type Exercise } from "@/content/exercises";
 import { PHOTOS } from "@/content/photos";
 import { DAYS, PROGRAM, type Day } from "@/content/program";
 import { PILLAR_LABELS } from "@/content/quiz";
+import { doseLines, pad2 } from "@/lib/format";
 
 // Chaque fiche est prérendue au build (generateStaticParams) : la navigation
 // attend la page statique, sans rendu serveur à la requête. Lire params en
@@ -25,7 +26,6 @@ export async function generateMetadata({ params }: PageProps<"/exercices/[slug]"
   return { title: `${exercise.name} - MAESTRO`, description: exercise.goal };
 }
 
-const pad = (n: number) => String(n).padStart(2, "0");
 
 /** Jours où l'exercice apparaît, semaine par semaine (1 à 12). */
 function schedule(slug: string): { week: number; days: Day[] }[] {
@@ -37,19 +37,6 @@ function schedule(slug: string): { week: number; days: Day[] }[] {
 
 function listFr(items: string[]): string {
   return items.length < 2 ? items.join("") : `${items.slice(0, -1).join(", ")} et ${items.at(-1)}`;
-}
-
-/** "Semaines 1 à 3 : 3 séries de 20." devient une ligne étiquette / valeur. */
-function doseLines(dose: string): { label?: string; value: string }[] {
-  return dose
-    .split(/(?<=\.)\s+/)
-    .filter(Boolean)
-    .map((sentence) => {
-      const at = sentence.indexOf(" : ");
-      return at === -1
-        ? { value: sentence }
-        : { label: sentence.slice(0, at), value: sentence.slice(at + 3) };
-    });
 }
 
 export default async function ExercisePage({ params }: PageProps<"/exercices/[slug]">) {
@@ -99,14 +86,15 @@ export default async function ExercisePage({ params }: PageProps<"/exercices/[sl
             <h2 id="etapes" className="text-2xl font-bold font-stretch-85%">
               Étapes
             </h2>
-            <ol className="mt-4">
+            {/* role="list" : Safari retire la sémantique de liste quand les puces sont masquées. */}
+            <ol role="list" className="mt-4">
               {exercise.steps.map((step, i) => (
                 <li
                   key={i}
                   className="grid grid-cols-[2.5rem_1fr] gap-2 border-t border-line py-3.5 leading-relaxed"
                 >
                   <span aria-hidden className="pt-0.5 font-mono text-sm text-ink-2">
-                    {pad(i + 1)}
+                    {pad2(i + 1)}
                   </span>
                   <span className="max-w-[62ch]">{step}</span>
                 </li>
@@ -118,7 +106,7 @@ export default async function ExercisePage({ params }: PageProps<"/exercices/[sl
             <h2 id="erreurs" className="text-2xl font-bold font-stretch-85%">
               Erreurs fréquentes
             </h2>
-            <ul className="mt-4 space-y-3">
+            <ul role="list" className="mt-4 space-y-3">
               {exercise.mistakes.map((m, i) => (
                 <li key={i} className="flex max-w-[62ch] gap-3 leading-relaxed text-ink-2">
                   <span aria-hidden className="mt-[0.7em] h-px w-3 shrink-0 bg-ink" />
@@ -157,12 +145,12 @@ export default async function ExercisePage({ params }: PageProps<"/exercices/[sl
                       aria-label={`Semaine ${week} : ${listFr([...days])}`}
                       className="flex h-11 items-center justify-center rounded bg-ink font-mono text-sm text-bg transition-transform duration-150 hover:bg-ink/85 active:scale-[0.96]"
                     >
-                      {pad(week)}
+                      {pad2(week)}
                     </Link>
                   ) : (
                     <span className="flex h-11 items-center justify-center rounded border border-line font-mono text-sm text-ink-2">
                       <span className="sr-only">Semaine {week} : pas au programme</span>
-                      <span aria-hidden>{pad(week)}</span>
+                      <span aria-hidden>{pad2(week)}</span>
                     </span>
                   )}
                 </li>

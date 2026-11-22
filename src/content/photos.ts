@@ -18,10 +18,10 @@ export const PHOTOS: Record<string, PhotoMeta> = {
     credit: "Andrea Piacquadio",
   },
   "/photos/exercices/gainage-lateral.jpg": {
-    width: 1600,
-    height: 1068,
-    alt: "Une sportive en gainage latéral sur un terrain de foot, le bras du dessus tendu vers le ciel.",
-    credit: "Leon Mart",
+    width: 1280,
+    height: 1600,
+    alt: "Un sportif en gainage latéral sur un court extérieur, en appui sur une main, le bras du dessus tendu vers le ciel.",
+    credit: "Göksun Barış Gökalp",
   },
   "/photos/exercices/squats.jpg": {
     width: 1067,
@@ -38,8 +38,8 @@ export const PHOTOS: Record<string, PhotoMeta> = {
   "/photos/exercices/retour-au-calme.jpg": {
     width: 1600,
     height: 1067,
-    alt: "Un footballeur étire l'avant de sa hanche en fente basse, à la fin d'un entraînement.",
-    credit: "Franco Monsalvo",
+    alt: "Un joueur assis sur un terrain synthétique, penché sur sa jambe tendue, étire l'arrière de sa cuisse.",
+    credit: "RDNE Stock project",
   },
   "/photos/exercices/respiration-4-7-8.jpg": {
     width: 1067,
@@ -80,13 +80,13 @@ export const PHOTOS: Record<string, PhotoMeta> = {
   "/photos/exercices/bilan-apres-match.jpg": {
     width: 1600,
     height: 1065,
-    alt: "Un jeune joueur assis sur un terrain synthétique écrit sur son téléphone, son sac à côté de lui.",
+    alt: "Un jeune joueur assis sur un terrain synthétique regarde son téléphone, son sac posé à côté de lui.",
     credit: "ANH LÊ",
   },
   "/photos/exercices/analyse-video-poste.jpg": {
     width: 1600,
     height: 1067,
-    alt: "Un jeune homme commente un match de foot qu'il regarde à la télévision.",
+    alt: "Un jeune homme parle en faisant un geste de la main, devant une télévision qui diffuse un match de foot.",
     credit: "khezez",
   },
 };

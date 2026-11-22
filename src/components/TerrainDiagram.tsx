@@ -3,7 +3,8 @@ import type { Diagram, Point } from "@/content/exercises";
 
 // Schéma d'exercice vu de dessus, dessiné à la main : aire de 100 × 60,
 // grille de mesure en --line, trajets en --blue. Course en pointillés,
-// passe ou frappe en trait plein, conduite de balle en trait ondulé.
+// passe ou frappe en trait plein, conduite de balle en trait ondulé, saut
+// en arc pointillé.
 // `animate` : chaque trajet se dessine à l'apparition (stroke-dashoffset
 // sur un masque), coupé sous "réduire les animations" dans globals.css.
 
@@ -37,7 +38,15 @@ function headPoints(from: Point, to: Point): string {
   ].join(" ");
 }
 
+/** Sommet de contrôle de l'arc d'un saut, du côté gauche du trajet. */
+function jumpControl(from: Point, to: Point): Point {
+  const { ux, uy, len } = axis(from, to);
+  const bulge = Math.min(6, len * 0.4);
+  return [(from[0] + to[0]) / 2 + uy * bulge, (from[1] + to[1]) / 2 - ux * bulge];
+}
+
 function strokePath(from: Point, to: Point, kind: Kind, head = true): string {
+  if (kind === "jump") return `M${pt(...from)}Q${pt(...jumpControl(from, to))} ${pt(...to)}`;
   const { ux, uy, len } = axis(from, to);
   const end = head ? Math.max(0, len - HEAD * 0.8) : len; // le trait s'arrête sous la pointe
   if (kind !== "dribble") return `M${pt(...from)}L${along(from, ux, uy, end)}`;
@@ -62,6 +71,7 @@ const KIND_LABEL: Record<Kind, [string, string]> = {
   run: ["course", "courses"],
   pass: ["passe ou frappe", "passes ou frappes"],
   dribble: ["conduite de balle", "conduites de balle"],
+  jump: ["saut", "sauts"],
 };
 
 function count(n: number, [one, many]: [string, string]): string {
@@ -75,7 +85,7 @@ export function describeDiagram(d: Diagram): string {
   if (d.line) parts.push("une ligne au sol");
   if (d.ball) parts.push("le ballon");
   if (d.player) parts.push("toi");
-  for (const kind of ["run", "pass", "dribble"] as const) {
+  for (const kind of ["run", "pass", "dribble", "jump"] as const) {
     const n = d.paths.filter((p) => p.kind === kind).length;
     if (n) parts.push(count(n, KIND_LABEL[kind]));
   }
@@ -149,7 +159,7 @@ export function TerrainDiagram({
           {paths.map((p, i) => (
             <mask key={i} id={`${id}-m${i}`} maskUnits="userSpaceOnUse" x="-5" y="-6" width="110" height="72">
               <path
-                d={`M${pt(...p.from)}L${pt(...p.to)}`}
+                d={p.kind === "jump" ? strokePath(p.from, p.to, "jump") : `M${pt(...p.from)}L${pt(...p.to)}`}
                 pathLength={1}
                 stroke="#fff"
                 strokeWidth="5"
@@ -181,11 +191,22 @@ export function TerrainDiagram({
                 d={strokePath(p.from, p.to, p.kind, head)}
                 fill="none"
                 strokeWidth={0.55 * w}
-                strokeDasharray={p.kind === "run" ? `${1.6 * w} ${1.2 * w}` : undefined}
+                strokeDasharray={
+                  p.kind === "run"
+                    ? `${1.6 * w} ${1.2 * w}`
+                    : p.kind === "jump"
+                      ? `${0.7 * w} ${1 * w}`
+                      : undefined
+                }
                 strokeLinecap={p.kind === "run" ? "butt" : "round"}
                 strokeLinejoin="round"
               />
-              {head && <polygon points={headPoints(p.from, p.to)} stroke="none" />}
+              {head && (
+                <polygon
+                  points={headPoints(p.kind === "jump" ? jumpControl(p.from, p.to) : p.from, p.to)}
+                  stroke="none"
+                />
+              )}
             </g>
           );
         })}
@@ -236,7 +257,8 @@ export function DiagramLegend({ diagram, className }: { diagram: Diagram; classN
           fill="none"
           stroke="var(--blue)"
           strokeWidth="1.3"
-          strokeDasharray={kind === "run" ? "3 2.2" : undefined}
+          strokeDasharray={kind === "run" ? "3 2.2" : kind === "jump" ? "1.4 1.6" : undefined}
+          strokeLinecap={kind === "jump" ? "round" : undefined}
         />
       ),
     });
@@ -244,6 +266,7 @@ export function DiagramLegend({ diagram, className }: { diagram: Diagram; classN
   path("run", "Course");
   path("pass", "Passe ou frappe");
   path("dribble", "Conduite de balle");
+  path("jump", "Saut");
 
   return (
     <ul className={`flex flex-wrap gap-x-5 gap-y-2 font-mono text-xs text-ink-2 ${className ?? ""}`}>

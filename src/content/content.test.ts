@@ -5,12 +5,20 @@ import { describe, expect, it } from "vitest";
 import { EXERCISES, getExercise } from "@/content/exercises";
 import { BENCHMARKS } from "@/content/benchmarks";
 import { PHOTOS } from "@/content/photos";
-import { DAYS, PHASES, PROGRAM, PROGRAM_RULES, isValidWeek, sessionId } from "@/content/program";
+import {
+  DAYS,
+  PHASES,
+  PROGRAM,
+  PROGRAM_RULES,
+  TEST_WEEKS,
+  isValidWeek,
+  parseWeekParam,
+  sessionId,
+} from "@/content/program";
 import { PILLARS, PROFILES, QUESTIONS } from "@/content/quiz";
 
 const slugs = EXERCISES.map((e) => e.slug);
 const sessions = PROGRAM.flatMap((w) => w.days.map((d) => ({ week: w.week, ...d })));
-const TEST_WEEKS = [1, 6, 12];
 const minutesOfWeek = (n: number) =>
   PROGRAM[n - 1].days.filter((d) => d.day !== "samedi").reduce((acc, d) => acc + d.minutes, 0);
 // Charge d'entraînement : sans le match du samedi ni les dimanches de tests.
@@ -214,6 +222,21 @@ describe("isValidWeek et sessionId", () => {
 
   it.each([1, 6, 12])("isValidWeek(%s) : true", (n) => {
     expect(isValidWeek(n)).toBe(true);
+  });
+
+  it.each([
+    ["1", 1],
+    ["12", 12],
+    ["03", null],
+    ["3.0", null],
+    ["0", null],
+    ["13", null],
+    ["-1", null],
+    ["", null],
+    ["abc", null],
+    [" 3", null],
+  ] as const)('parseWeekParam("%s") : %s', (raw, expected) => {
+    expect(parseWeekParam(raw)).toBe(expected);
   });
 
   it('sessionId(3, "mardi") : "w3-mardi"', () => {

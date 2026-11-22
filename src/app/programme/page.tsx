@@ -4,7 +4,8 @@ import { ArrowRightIcon } from "@phosphor-icons/react/ssr";
 import { EducatorNote } from "@/components/EducatorNote";
 import { QuizRecall } from "@/components/program/QuizRecall";
 import { WeekProgress } from "@/components/program/WeekProgress";
-import { PHASES, PROGRAM, PROGRAM_RULES } from "@/content/program";
+import { PHASES, PROGRAM, PROGRAM_RULES, TEST_WEEKS } from "@/content/program";
+import { pad2 } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Programme 12 semaines - MAESTRO",
@@ -12,8 +13,6 @@ export const metadata: Metadata = {
     "Le programme MAESTRO : 12 semaines en 4 phases, une séance par jour du lundi au dimanche, au poids du corps et adaptée aux 13-14 ans.",
 };
 
-const pad = (n: number) => String(n).padStart(2, "0");
-const TEST_WEEKS = new Set([1, 6, 12]);
 
 /** Minutes de la semaine hors match du samedi. */
 function trainingMinutes(week: number): number {
@@ -72,7 +71,7 @@ export default function ProgrammePage() {
                         className="group grid grid-cols-[3rem_1fr_auto] items-center gap-x-4 gap-y-2 border-b border-line py-4 first:pt-0 sm:grid-cols-[3.5rem_1fr_auto_1.5rem]"
                       >
                         <span className="font-mono text-3xl leading-none text-ink-2 group-hover:text-ink">
-                          {pad(week)}
+                          {pad2(week)}
                         </span>
                         <span>
                           <span className="block text-lg font-bold font-stretch-85% group-hover:underline group-hover:decoration-2">
@@ -80,7 +79,7 @@ export default function ProgrammePage() {
                           </span>
                           <span className="block font-mono text-xs text-ink-2">
                             {trainingMinutes(week)} min hors match
-                            {TEST_WEEKS.has(week) ? ", tests dimanche" : ""}
+                            {TEST_WEEKS.includes(week) ? ", tests dimanche" : ""}
                           </span>
                         </span>
                         <WeekProgress week={week} />
