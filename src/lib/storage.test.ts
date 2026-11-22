@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { load, remove, save } from "./storage";
+import { load, remove, save } from "@/lib/storage";
 
 function memoryStorage(): Storage {
   const data = new Map<string, string>();
@@ -59,6 +59,26 @@ describe("storage avec localStorage disponible", () => {
     vi.stubGlobal("localStorage", mem);
 
     expect(load("a", 7)).toBe(7);
+  });
+
+  it.each([0, false, ""])("relit une valeur fausse (%j) sans tomber sur le fallback", (value) => {
+    vi.stubGlobal("localStorage", memoryStorage());
+    save("a", value);
+    expect(load("a", 7)).toBe(value);
+  });
+
+  it("valeur non sérialisable (undefined, fonction, circulaire) : l'ancienne valeur reste", () => {
+    const mem = memoryStorage();
+    vi.stubGlobal("localStorage", mem);
+    save("a", { x: 1 });
+
+    const circular: Record<string, unknown> = {};
+    circular.self = circular;
+    for (const bad of [undefined, () => 1, circular]) {
+      expect(() => save("a", bad)).not.toThrow();
+      expect(mem.getItem("maestro:v1:a")).toBe('{"x":1}');
+    }
+    expect(load("a", null)).toEqual({ x: 1 });
   });
 
   it("remove efface la clé", () => {

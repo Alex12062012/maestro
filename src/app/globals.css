@@ -14,6 +14,9 @@
   --signal: #c8f03c;
   --blue: #2f5bd3;
 
+  /* Hauteur du header, réutilisée pour le menu mobile et le scroll. */
+  --header-h: 4rem;
+
   color-scheme: light;
 }
 
@@ -45,7 +48,7 @@
 }
 
 html {
-  scroll-padding-top: 64px;
+  scroll-padding-top: var(--header-h);
   scrollbar-color: var(--ink-2) var(--bg);
   -webkit-text-size-adjust: 100%;
 }

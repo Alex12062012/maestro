@@ -15,7 +15,11 @@ export function load<T>(key: string, fallback: T): T {
 
 export function save(key: string, value: unknown): void {
   try {
-    globalThis.localStorage.setItem(PREFIX + key, JSON.stringify(value));
+    // undefined ou fonction : stringify renvoie undefined. Objet circulaire :
+    // il lance. Dans les deux cas on n'écrit rien, l'ancienne valeur reste.
+    const json = JSON.stringify(value);
+    if (json === undefined) return;
+    globalThis.localStorage.setItem(PREFIX + key, json);
   } catch {}
 }
 

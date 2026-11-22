@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { ArrowRightIcon } from "@phosphor-icons/react/ssr";
+import { ButtonLink } from "@/components/Button";
 
 // Accueil provisoire : la vraie page d'accueil arrive avec sa propre tâche.
 export default function Home() {
@@ -12,13 +12,10 @@ export default function Home() {
         Un programme de foot gratuit sur 12 semaines pour les 13-14 ans. Fais
         le test, suis tes séances, mesure tes progrès.
       </p>
-      <Link
-        href="/test"
-        className="mt-10 inline-flex h-12 items-center gap-2 rounded bg-ink px-6 font-semibold text-bg transition-transform duration-150 hover:bg-ink/85 active:scale-[0.98]"
-      >
+      <ButtonLink href="/test" className="mt-10">
         Faire le test
         <ArrowRightIcon size={18} weight="regular" aria-hidden />
-      </Link>
+      </ButtonLink>
     </section>
   );
 }

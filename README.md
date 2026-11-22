@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MAESTRO
 
-## Getting Started
+Site gratuit pour aider les joueurs de foot de 13-14 ans à progresser sur 12 semaines : un test de profil sur 4 piliers (technique, physique, mental, vision), un programme séance par séance, des fiches d'exercices et un suivi de progression.
 
-First, run the development server:
+Pas de compte, aucune donnée personnelle : la progression reste dans le navigateur (`localStorage`).
+
+Production : https://maestro-nine-chi.vercel.app (déployée par Vercel à chaque push sur `main`).
+
+## Lancer le projet
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # serveur de développement sur http://localhost:3000
+npm test        # tests Vitest
+npm run build   # build de production
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ne pas lancer `npm run build` pendant que `npm run dev` tourne : le build écrase `.next`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Next.js 16 (App Router, TypeScript), Tailwind CSS v4, Motion, Phosphor Icons, Vitest.
 
-## Learn More
+## Documentation
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Design : [docs/superpowers/specs/2026-11-22-maestro-design.md](docs/superpowers/specs/2026-11-22-maestro-design.md)
+- Plan d'implémentation : [docs/superpowers/plans/2026-11-22-maestro.md](docs/superpowers/plans/2026-11-22-maestro.md)

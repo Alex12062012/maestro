@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { ArrowRightIcon } from "@phosphor-icons/react/ssr";
+import { ButtonLink } from "@/components/Button";
 
 // Terrain vu de dessus, ballon sorti en touche.
 function PitchOut() {
@@ -43,19 +43,11 @@ export default function NotFound() {
           d&apos;erreur <span className="font-mono text-ink">404</span>.
         </p>
         <div className="mt-10 flex flex-wrap gap-3">
-          <Link
-            href="/"
-            className="inline-flex h-12 items-center rounded bg-ink px-6 font-semibold text-bg transition-transform duration-150 hover:bg-ink/85 active:scale-[0.98]"
-          >
-            Retour à l&apos;accueil
-          </Link>
-          <Link
-            href="/test"
-            className="inline-flex h-12 items-center gap-2 rounded border border-line px-6 font-semibold text-ink transition-transform duration-150 hover:border-ink active:scale-[0.98]"
-          >
+          <ButtonLink href="/">Retour à l&apos;accueil</ButtonLink>
+          <ButtonLink href="/test" variant="secondary">
             Faire le test
             <ArrowRightIcon size={18} weight="regular" aria-hidden />
-          </Link>
+          </ButtonLink>
         </div>
       </div>
       <PitchOut />
