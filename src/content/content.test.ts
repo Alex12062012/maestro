@@ -1,5 +1,9 @@
+import { statSync } from "node:fs";
+import { join } from "node:path";
+import sharp from "sharp";
 import { describe, expect, it } from "vitest";
 import { EXERCISES, getExercise } from "@/content/exercises";
+import { PHOTOS } from "@/content/photos";
 import { DAYS, PHASES, PROGRAM, PROGRAM_RULES, isValidWeek, sessionId } from "@/content/program";
 import { PILLARS, PROFILES, QUESTIONS } from "@/content/quiz";
 
@@ -147,6 +151,7 @@ describe("EXERCISES", () => {
         ...d.cones,
         ...(d.ball ? [d.ball] : []),
         ...(d.player ? [d.player] : []),
+        ...(d.line ?? []),
         ...d.paths.flatMap((p) => [p.from, p.to]),
       ];
       for (const p of points) expect(inGrid(p), `${e.slug} ${p}`).toBe(true);
@@ -159,8 +164,29 @@ describe("EXERCISES", () => {
   });
 });
 
+describe("PHOTOS", () => {
+  it("chaque photo citée par une fiche a ses dimensions et son texte alternatif", () => {
+    for (const e of EXERCISES) {
+      if (!e.photo) continue;
+      expect(PHOTOS[e.photo], e.slug).toBeDefined();
+      expect(PHOTOS[e.photo].alt.trim(), e.slug).not.toBe("");
+    }
+  });
+
+  it("chaque fichier existe, en JPEG, aux dimensions déclarées, 1600 px et 250 Ko au plus", async () => {
+    for (const [src, meta] of Object.entries(PHOTOS)) {
+      const file = join(process.cwd(), "public", src);
+      const info = await sharp(file).metadata();
+      expect(info.format, src).toBe("jpeg");
+      expect([info.width, info.height], src).toEqual([meta.width, meta.height]);
+      expect(Math.max(meta.width, meta.height), src).toBeLessThanOrEqual(1600);
+      expect(statSync(file).size, src).toBeLessThanOrEqual(250 * 1024);
+    }
+  });
+});
+
 describe("textes", () => {
-  const all = JSON.stringify({ EXERCISES, PROGRAM, PHASES, PROGRAM_RULES, QUESTIONS, PROFILES });
+  const all = JSON.stringify({ EXERCISES, PROGRAM, PHASES, PROGRAM_RULES, QUESTIONS, PROFILES, PHOTOS });
 
   it("aucun tiret cadratin ni demi-cadratin", () => {
     expect(all).not.toMatch(/[—–]/);

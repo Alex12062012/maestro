@@ -11,6 +11,10 @@ export type Diagram = {
   ball?: Point;
   player?: Point;
   paths: { from: Point; to: Point; kind: "run" | "pass" | "dribble" }[];
+  /** Le bord haut (y = 0) est un mur. */
+  wall?: boolean;
+  /** Ligne tracée au sol ou bâton posé par terre. */
+  line?: [Point, Point];
 };
 
 export type Exercise = {
@@ -25,11 +29,11 @@ export type Exercise = {
   harder: string;
   /** Exercices avec ballon ou plots. */
   diagram?: Diagram;
-  /** Exercices au sol ou sans terrain. Images ajoutées dans public/photos/exercices/. */
+  /** Exercices au sol ou sans terrain. Fichier dans public/photos/exercices/, détails dans `@/content/photos`. */
   photo?: string;
 };
 
-// Dans les schémas "contre un mur", le mur est le bord haut (y = 0).
+// Dans les schémas "contre un mur" (wall: true), le mur est le bord haut (y = 0).
 
 export const EXERCISES: Exercise[] = [
   // Technique
@@ -54,6 +58,7 @@ export const EXERCISES: Exercise[] = [
     easier: "Passe plus doucement et autorise-toi deux touches : un amorti, puis la poussée vers le plot.",
     harder: "Recule à 7 ou 8 mètres et passe plus fort, ou contrôle avec l'extérieur du pied.",
     diagram: {
+      wall: true,
       cones: [
         [34, 44],
         [66, 44],
@@ -87,6 +92,7 @@ export const EXERCISES: Exercise[] = [
     easier: "Rapproche-toi à 2 mètres et laisse le ballon s'arrêter avant chaque passe.",
     harder: "Recule à 6 mètres, ou alterne intérieur et extérieur du pied faible à chaque passe.",
     diagram: {
+      wall: true,
       cones: [
         [42, 46],
         [58, 46],
@@ -119,6 +125,7 @@ export const EXERCISES: Exercise[] = [
     easier: "Fais-le en marchant, et autorise-toi deux touches.",
     harder: "Accélère, et ne touche le ballon qu'avec le pied le plus éloigné du mur.",
     diagram: {
+      wall: true,
       cones: [
         [22, 36],
         [78, 36],
@@ -506,7 +513,18 @@ export const EXERCISES: Exercise[] = [
     ],
     easier: "Un saut, un temps d'arrêt, puis le saut suivant.",
     harder: "Sur un seul pied, 10 secondes par jambe.",
-    photo: "/photos/exercices/sauts-lateraux.jpg",
+    diagram: {
+      cones: [],
+      line: [
+        [50, 14],
+        [50, 46],
+      ],
+      player: [42, 30],
+      paths: [
+        { from: [43, 25], to: [57, 25], kind: "run" },
+        { from: [57, 35], to: [43, 35], kind: "run" },
+      ],
+    },
   },
   {
     slug: "gainage-planche",
@@ -821,6 +839,7 @@ export const EXERCISES: Exercise[] = [
     easier: "Seul : à chaque retour du ballon, regarde un repère derrière toi (un arbre, un poteau) avant de contrôler.",
     harder: "Regarde deux fois avant chaque réception, une fois de chaque côté.",
     diagram: {
+      wall: true,
       cones: [[28, 54]],
       ball: [50, 34],
       player: [50, 39],
@@ -989,6 +1008,7 @@ export const EXERCISES: Exercise[] = [
     easier: "Sans porte : contrôle simplement vers le côté où ton corps est ouvert.",
     harder: "Reçois en une touche, directement à travers la porte.",
     diagram: {
+      wall: true,
       cones: [
         [20, 36],
         [20, 44],
