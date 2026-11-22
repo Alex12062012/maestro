@@ -259,7 +259,7 @@ function Board({ initial }: { initial: Measures }) {
 
       <section
         aria-labelledby="evolution"
-        className="on-dark mt-16 -mx-5 bg-surface-dark px-5 py-10 text-bg md:mx-0 md:mt-20 md:rounded md:p-10"
+        className="on-dark mt-16 -mx-5 bg-surface-dark px-5 py-10 text-on-dark md:mx-0 md:mt-20 md:rounded md:p-10"
       >
         <h2
           id="evolution"
@@ -270,7 +270,7 @@ function Board({ initial }: { initial: Measures }) {
         {any ? (
           <ul className="mt-8 grid gap-x-10 md:grid-cols-2 xl:grid-cols-3">
             {BENCHMARKS.map((b) => (
-              <li key={b.id} className="border-t border-bg/15 py-6">
+              <li key={b.id} className="border-t border-on-dark/15 py-6">
                 <Trend benchmark={b} measures={measures} />
               </li>
             ))}
@@ -312,14 +312,14 @@ function Trend({ benchmark, measures }: { benchmark: Benchmark; measures: Measur
         {lastCp && (
           <p className="font-mono text-2xl text-signal">
             {formatNumber(values[lastCp]!)}
-            <span className="text-sm text-bg/60">{unit}</span>
+            <span className="text-sm text-on-dark/60">{unit}</span>
           </p>
         )}
       </div>
-      <p className="mt-1 text-[0.9375rem] text-bg/75">
+      <p className="mt-1 text-[0.9375rem] text-on-dark/75">
         {note}
         {benchmark.better === "lower" && (
-          <span className="block font-mono text-xs text-bg/60">
+          <span className="block font-mono text-xs text-on-dark/60">
             Plus c&apos;est bas, mieux c&apos;est
           </span>
         )}
@@ -337,13 +337,13 @@ function EmptyState() {
         séance de tests : ta note de confiance d&apos;abord, puis l&apos;échauffement, les jongles, le
         slalom, le sprint et les frappes.
       </p>
-      <p className="mt-3 leading-relaxed text-bg/75">
+      <p className="mt-3 leading-relaxed text-on-dark/75">
         Entre tes résultats juste après. Ils deviennent ton point de départ, et les semaines 6 et 12
         viendront se placer sur les courbes.
       </p>
       <Link
         href="/programme/semaine/1#jour-dimanche"
-        className="mt-6 inline-flex h-12 items-center gap-2 rounded bg-bg px-6 font-semibold text-ink transition-transform duration-150 hover:bg-bg/85 active:scale-[0.98]"
+        className="mt-6 inline-flex h-12 items-center gap-2 rounded bg-on-dark px-6 font-semibold text-surface-dark transition-transform duration-150 hover:bg-on-dark/85 active:scale-[0.98]"
       >
         Voir la séance de tests
         <ArrowRightIcon size={18} weight="regular" aria-hidden />

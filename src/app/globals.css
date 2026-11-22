@@ -1,24 +1,44 @@
 @import "tailwindcss";
 
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
+
 /*
-  Palette MAESTRO. Les rôles sont fixes :
-  - --signal (fluo) uniquement sur --surface-dark, jamais sur fond clair.
-  - --blue en touche ponctuelle, graphiques uniquement ; --blue-on-dark pour
-    les graphiques sur --surface-dark.
+  Palette MAESTRO. Sombre par défaut, clair sur choix (data-theme="light").
+  - --surface-dark : panneaux. Clair : section anthracite. Sombre : léger relief
+    au-dessus du fond. Texte des panneaux en --on-dark.
+  - --signal (fluo) à petite dose (chiffres clés, état actif, focus). En clair,
+    uniquement sur --surface-dark.
+  - --blue : graphiques sur le fond ; --blue-on-dark : graphiques sur panneau.
 */
 :root {
+  --bg: #0f1211;
+  --ink: #e8ece9;
+  --ink-2: #a7afab;
+  --surface-dark: #181c1a;
+  --on-dark: #e8ece9;
+  --line: #2a302d;
+  --panel-edge: #2a302d;
+  --signal: #c8f03c;
+  --blue: #5b82e8;
+  --blue-on-dark: #5b82e8;
+  --focus: var(--signal);
+
+  /* Hauteur du header, réutilisée pour le menu mobile et le scroll. */
+  --header-h: 4rem;
+
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
   --bg: #eef0ee;
   --ink: #111413;
   --ink-2: #4a504d;
   --surface-dark: #1a1d1c;
+  --on-dark: #eef0ee;
   --line: #cdd2cf;
-  --signal: #c8f03c;
+  --panel-edge: transparent;
   --blue: #2f5bd3;
-  /* Même bleu, éclairci pour les graphiques sur --surface-dark (4,7:1). */
-  --blue-on-dark: #5b82e8;
-
-  /* Hauteur du header, réutilisée pour le menu mobile et le scroll. */
-  --header-h: 4rem;
+  --focus: var(--ink);
 
   color-scheme: light;
 }
@@ -36,6 +56,7 @@
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);
   --color-surface-dark: var(--surface-dark);
+  --color-on-dark: var(--on-dark);
   --color-line: var(--line);
   --color-signal: var(--signal);
   --color-blue: var(--blue);
@@ -63,16 +84,30 @@ body {
 }
 
 ::selection {
-  background: var(--ink);
+  background: var(--focus);
   color: var(--bg);
 }
 
 :focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
-/* Zones sombres : le fluo devient la couleur d'interaction. */
+/* Panneaux : bord fin en thème sombre (relief), transparent en clair. */
+.on-dark {
+  box-shadow: inset 0 0 0 1px var(--panel-edge);
+}
+
+footer.on-dark {
+  box-shadow: inset 0 1px 0 var(--panel-edge);
+}
+
+/* Photos un peu atténuées en sombre pour qu'elles ne brillent pas. */
+:root:not([data-theme="light"]) img {
+  filter: brightness(0.88);
+}
+
+/* Panneaux : le fluo devient la couleur d'interaction. */
 .on-dark ::selection {
   background: var(--signal);
   color: var(--surface-dark);

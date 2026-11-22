@@ -17,6 +17,10 @@ npm run build   # build de production
 
 Ne pas lancer `npm run build` pendant que `npm run dev` tourne : le build écrase `.next`.
 
+## Thème
+
+Sombre par défaut pour tout le monde. Le bouton soleil/lune du header passe en clair ; le choix est gardé dans le navigateur (`maestro:v1:theme`). Toutes les couleurs sont des variables dans `src/app/globals.css` (`:root` = sombre, `:root[data-theme="light"]` = clair) : aucun composant ne code de couleur en dur, un test le vérifie.
+
 ## Stack
 
 Next.js 16 (App Router, TypeScript), Tailwind CSS v4, Motion, Phosphor Icons, Vitest.

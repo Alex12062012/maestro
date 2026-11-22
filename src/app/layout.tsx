@@ -3,6 +3,7 @@ import { Archivo, JetBrains_Mono } from "next/font/google";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { NavTracker } from "@/components/nav/NavTracker";
+import { THEME_SCRIPT } from "@/lib/theme";
 import "@/app/globals.css";
 
 const archivo = Archivo({
@@ -26,8 +27,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="fr"
+      data-theme="dark"
+      suppressHydrationWarning
       className={`${archivo.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
+      <head>
+        {/* Applique le thème enregistré avant la première peinture. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="flex min-h-full flex-col bg-bg font-sans text-ink">
         <a
           href="#contenu"

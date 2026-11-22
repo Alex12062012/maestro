@@ -156,12 +156,13 @@ export function TerrainDiagram({
 
       {animate && (
         <defs>
+          {/* Masques : le blanc veut dire "visible", ce n'est pas une couleur affichée. */}
           {paths.map((p, i) => (
             <mask key={i} id={`${id}-m${i}`} maskUnits="userSpaceOnUse" x="-5" y="-6" width="110" height="72">
               <path
                 d={p.kind === "jump" ? strokePath(p.from, p.to, "jump") : `M${pt(...p.from)}L${pt(...p.to)}`}
                 pathLength={1}
-                stroke="#fff"
+                stroke="white"
                 strokeWidth="5"
                 fill="none"
                 className="terrain-draw"

@@ -2,7 +2,7 @@
 // serveur), bloqué (navigation privée, Safari strict), plein, ou contient
 // une valeur illisible, on avale l'erreur : le site marche, la progression
 // ne se garde juste pas.
-const PREFIX = "maestro:v1:";
+export const PREFIX = "maestro:v1:";
 
 export function load<T>(key: string, fallback: T): T {
   try {

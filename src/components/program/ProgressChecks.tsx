@@ -18,7 +18,7 @@ function Box({ onDark }: { onDark: boolean }) {
       aria-hidden
       className={`flex size-6 shrink-0 items-center justify-center rounded border-2 text-transparent transition-colors duration-150 ${
         onDark
-          ? "border-bg/50 group-aria-pressed:border-signal group-aria-pressed:bg-signal group-aria-pressed:text-surface-dark"
+          ? "border-on-dark/50 group-aria-pressed:border-signal group-aria-pressed:bg-signal group-aria-pressed:text-surface-dark"
           : "border-ink-2 group-aria-pressed:border-ink group-aria-pressed:bg-ink group-aria-pressed:text-bg"
       }`}
     >
@@ -46,7 +46,7 @@ export function ExerciseCheck({
       aria-pressed={done}
       onClick={() => toggleExerciseDone(session, slug)}
       className={`group -ml-2.5 flex size-11 shrink-0 items-center justify-center rounded transition-transform duration-150 active:scale-[0.94] ${
-        onDark ? "hover:bg-bg/10" : "hover:bg-ink/5"
+        onDark ? "hover:bg-on-dark/10" : "hover:bg-ink/5"
       }`}
     >
       <Box onDark={onDark} />
@@ -96,7 +96,7 @@ export function DayCheck({
       onClick={() => toggleDayDone(session)}
       className={`group inline-flex h-11 shrink-0 items-center gap-2.5 rounded border px-3 font-semibold transition-transform duration-150 active:scale-[0.97] ${
         onDark
-          ? "border-bg/30 hover:border-bg/60 aria-pressed:border-signal"
+          ? "border-on-dark/30 hover:border-on-dark/60 aria-pressed:border-signal"
           : "border-line hover:border-ink aria-pressed:border-ink"
       }`}
     >

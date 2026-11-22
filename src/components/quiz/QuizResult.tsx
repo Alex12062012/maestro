@@ -84,7 +84,7 @@ export function QuizResult({
     <div>
       <section
         aria-labelledby="profil"
-        className="on-dark -mx-5 grid gap-8 bg-surface-dark px-5 py-10 text-bg md:mx-0 md:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] md:grid-rows-[auto_1fr] md:gap-x-12 md:gap-y-10 md:rounded md:p-12"
+        className="on-dark -mx-5 grid gap-8 bg-surface-dark px-5 py-10 text-on-dark md:mx-0 md:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] md:grid-rows-[auto_1fr] md:gap-x-12 md:gap-y-10 md:rounded md:p-12"
       >
         {/* Téléphone : nom, radar, relevé. Ordinateur : radar à droite. */}
         <div>
@@ -97,7 +97,7 @@ export function QuizResult({
             <span className="sr-only">Ton profil : </span>
             {profile.name}
           </h2>
-          <p className="mt-5 max-w-[48ch] text-lg leading-relaxed text-bg/80">{profile.summary}</p>
+          <p className="mt-5 max-w-[48ch] text-lg leading-relaxed text-on-dark/80">{profile.summary}</p>
         </div>
 
         <Radar
@@ -110,9 +110,9 @@ export function QuizResult({
             {PILLARS.map((p) => (
               <div
                 key={p}
-                className="flex items-baseline justify-between border-b border-bg/15 py-2.5"
+                className="flex items-baseline justify-between border-b border-on-dark/15 py-2.5"
               >
-                <dt className="font-sans text-bg/80">{PILLAR_LABELS[p]}</dt>
+                <dt className="font-sans text-on-dark/80">{PILLAR_LABELS[p]}</dt>
                 <dd className="text-lg">
                   <Score value={result.pillars[p]} />
                 </dd>
@@ -122,7 +122,7 @@ export function QuizResult({
               <dt className="font-sans font-semibold">Score global</dt>
               <dd className="text-3xl text-signal">
                 <Score value={result.total} />
-                <span className="text-base text-bg/60">/100</span>
+                <span className="text-base text-on-dark/60">/100</span>
               </dd>
             </div>
           </dl>

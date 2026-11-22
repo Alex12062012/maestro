@@ -21,7 +21,7 @@ export function QuizRecall({ className }: { className?: string }) {
   // Même hauteur minimale pour l'invitation (HTML statique) et le profil
   // (navigateur) : le passage de l'un à l'autre ne décale pas la page.
   // 24rem couvre le profil le plus long, mesuré à 375 et 1440 px.
-  const frame = `on-dark flex min-h-[24rem] flex-col rounded bg-surface-dark p-6 text-bg md:p-8 ${className ?? ""}`;
+  const frame = `on-dark flex min-h-[24rem] flex-col rounded bg-surface-dark p-6 text-on-dark md:p-8 ${className ?? ""}`;
 
   if (!result) {
     return (
@@ -29,13 +29,13 @@ export function QuizRecall({ className }: { className?: string }) {
         <h2 id="profil" className="text-2xl leading-tight font-bold font-stretch-85%">
           Pas encore de profil
         </h2>
-        <p className="mt-3 mb-6 max-w-[44ch] leading-relaxed text-bg/80">
+        <p className="mt-3 mb-6 max-w-[44ch] leading-relaxed text-on-dark/80">
           Le test Maestro te dit quel pilier travailler en premier : 12 questions, une par écran.
           Ton résultat reste dans ce navigateur.
         </p>
         <Link
           href="/test"
-          className="mt-auto inline-flex h-12 items-center gap-2 self-start rounded bg-bg px-6 font-semibold text-ink transition-transform duration-150 hover:bg-bg/85 active:scale-[0.98]"
+          className="mt-auto inline-flex h-12 items-center gap-2 self-start rounded bg-on-dark px-6 font-semibold text-surface-dark transition-transform duration-150 hover:bg-on-dark/85 active:scale-[0.98]"
         >
           Faire le test
           <ArrowRightIcon size={18} weight="regular" aria-hidden />
@@ -53,19 +53,19 @@ export function QuizRecall({ className }: { className?: string }) {
         <span className="sr-only">Ton profil : </span>
         {profile.name}
       </h2>
-      <p className="mt-2 font-mono text-sm text-bg/60">Ton profil au test Maestro</p>
-      <p className="mt-5 flex items-baseline justify-between gap-4 border-t border-bg/15 pt-4">
-        <span className="text-bg/80">À travailler en premier : {PILLAR_LABELS[toWork]}</span>
+      <p className="mt-2 font-mono text-sm text-on-dark/60">Ton profil au test Maestro</p>
+      <p className="mt-5 flex items-baseline justify-between gap-4 border-t border-on-dark/15 pt-4">
+        <span className="text-on-dark/80">À travailler en premier : {PILLAR_LABELS[toWork]}</span>
         <span className="font-mono text-2xl text-signal">
           {result.pillars[toWork]}
-          <span className="text-base text-bg/60">/100</span>
+          <span className="text-base text-on-dark/60">/100</span>
         </span>
       </p>
-      <p className="mt-3 max-w-[48ch] leading-relaxed text-bg/80">{profile.focus}</p>
+      <p className="mt-3 max-w-[48ch] leading-relaxed text-on-dark/80">{profile.focus}</p>
       <div className="mt-auto pt-5">
         <Link
           href="/test"
-          className="inline-flex h-11 items-center text-[0.9375rem] text-bg/80 underline decoration-bg/30 hover:text-bg hover:decoration-signal"
+          className="inline-flex h-11 items-center text-[0.9375rem] text-on-dark/80 underline decoration-on-dark/30 hover:text-on-dark hover:decoration-signal"
         >
           Revoir le résultat du test
         </Link>

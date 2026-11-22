@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { ListIcon, XIcon } from "@phosphor-icons/react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Wordmark } from "@/components/Wordmark";
 
 const LINKS = [
@@ -58,48 +59,50 @@ function HeaderBar({ pathname }: { pathname?: string }) {
           <Wordmark />
         </Link>
 
-        <button
-          ref={toggleRef}
-          type="button"
-          onClick={() => setOpenOn(open ? null : here)}
-          aria-expanded={open}
-          aria-controls="menu-principal"
-          aria-label="Menu"
-          className="-mr-2 inline-flex size-11 items-center justify-center rounded text-ink md:hidden"
-        >
-          {open ? (
-            <XIcon size={26} weight="regular" aria-hidden />
-          ) : (
-            <ListIcon size={26} weight="regular" aria-hidden />
-          )}
-        </button>
-
-        <nav
-          ref={navRef}
-          id="menu-principal"
-          aria-label="Navigation principale"
-          className={`${open ? "block animate-menu-in" : "hidden"} absolute inset-x-0 top-(--header-h) border-b border-line bg-bg px-5 pb-6 md:static md:block md:border-0 md:p-0`}
-        >
-          <ul className="flex flex-col md:flex-row md:items-center md:gap-9">
-            {LINKS.map(({ href, label }) => {
-              const active =
-                pathname !== undefined &&
-                (pathname === href || pathname.startsWith(`${href}/`));
-              return (
-                <li key={href} className="border-t border-line md:border-0">
-                  <Link
-                    href={href}
-                    onClick={close}
-                    aria-current={active ? "page" : undefined}
-                    className="flex h-14 items-center text-3xl font-bold uppercase font-stretch-75% text-ink-2 hover:text-ink aria-[current=page]:text-ink aria-[current=page]:underline aria-[current=page]:decoration-2 md:h-11 md:text-base md:font-semibold md:tracking-[0.04em]"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+        <div className="flex items-center gap-1 md:gap-6">
+          <nav
+            ref={navRef}
+            id="menu-principal"
+            aria-label="Navigation principale"
+            className={`${open ? "block animate-menu-in" : "hidden"} absolute inset-x-0 top-(--header-h) border-b border-line bg-bg px-5 pb-6 md:static md:block md:border-0 md:p-0`}
+          >
+            <ul className="flex flex-col md:flex-row md:items-center md:gap-9">
+              {LINKS.map(({ href, label }) => {
+                const active =
+                  pathname !== undefined &&
+                  (pathname === href || pathname.startsWith(`${href}/`));
+                return (
+                  <li key={href} className="border-t border-line md:border-0">
+                    <Link
+                      href={href}
+                      onClick={close}
+                      aria-current={active ? "page" : undefined}
+                      className="flex h-14 items-center text-3xl font-bold uppercase font-stretch-75% text-ink-2 hover:text-ink aria-[current=page]:text-ink aria-[current=page]:underline aria-[current=page]:decoration-2 md:h-11 md:text-base md:font-semibold md:tracking-[0.04em]"
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+          <ThemeToggle />
+          <button
+            ref={toggleRef}
+            type="button"
+            onClick={() => setOpenOn(open ? null : here)}
+            aria-expanded={open}
+            aria-controls="menu-principal"
+            aria-label="Menu"
+            className="-mr-2 inline-flex size-11 items-center justify-center rounded text-ink md:hidden"
+          >
+            {open ? (
+              <XIcon size={26} weight="regular" aria-hidden />
+            ) : (
+              <ListIcon size={26} weight="regular" aria-hidden />
+            )}
+          </button>
+        </div>
       </div>
     </header>
   );

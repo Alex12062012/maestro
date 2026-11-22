@@ -68,7 +68,7 @@ export function ProgressChart({
       aria-label={`${benchmark.label}, ${summary}.`}
       className={className}
     >
-      <g className="font-mono" fontSize={TEXT} fill="var(--bg)" fillOpacity="0.6">
+      <g className="font-mono" fontSize={TEXT} fill="var(--on-dark)" fillOpacity="0.6">
         {ticks.map((t) => (
           <g key={t}>
             <line
@@ -76,7 +76,7 @@ export function ProgressChart({
               x2={W - R}
               y1={y(t)}
               y2={y(t)}
-              stroke="var(--bg)"
+              stroke="var(--on-dark)"
               strokeOpacity={t === lo ? 0.3 : 0.12}
             />
             <text x={L - 8} y={y(t) + 4.5} textAnchor="end">
@@ -99,7 +99,7 @@ export function ProgressChart({
           x2={x(cp)}
           y1={T}
           y2={H - B}
-          stroke="var(--bg)"
+          stroke="var(--on-dark)"
           strokeOpacity="0.3"
           strokeDasharray="2 4"
         />
@@ -134,7 +134,7 @@ export function ProgressChart({
               textAnchor={p.cp === "w12" ? "end" : p.cp === "w1" ? "start" : "middle"}
               className="font-mono"
               fontSize={TEXT}
-              fill={last ? "var(--signal)" : "var(--bg)"}
+              fill={last ? "var(--signal)" : "var(--on-dark)"}
               fillOpacity={last ? 1 : 0.8}
             >
               {formatNumber(p.value)}

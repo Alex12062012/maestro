@@ -118,14 +118,14 @@ function SessionBlock({ week, session }: { week: number; session: Session }) {
   // Même liste que la progression : un exercice répété ne compte qu'une fois.
   const { slugs } = sessionRef(id, session.exercises);
   const exercises = slugs.map((slug) => getExercise(slug)!);
-  const muted = testDay ? "text-bg/60" : "text-ink-2";
+  const muted = testDay ? "text-on-dark/60" : "text-ink-2";
 
   return (
     <article
       aria-labelledby={`jour-${session.day}`}
       className={`grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-4 md:grid-cols-[10rem_minmax(0,1fr)_auto] md:gap-x-8 ${
         testDay
-          ? "on-dark my-4 rounded bg-surface-dark p-5 text-bg md:p-8"
+          ? "on-dark my-4 rounded bg-surface-dark p-5 text-on-dark md:p-8"
           : "border-t border-line py-7"
       }`}
     >
@@ -158,7 +158,7 @@ function SessionBlock({ week, session }: { week: number; session: Session }) {
             {exercises.map((e) => (
               <li
                 key={e.slug}
-                className={`flex items-center gap-1 border-b ${testDay ? "border-bg/15" : "border-line"}`}
+                className={`flex items-center gap-1 border-b ${testDay ? "border-on-dark/15" : "border-line"}`}
               >
                 <ExerciseCheck session={id} slug={e.slug} name={e.name} onDark={testDay} />
                 <Link
@@ -176,10 +176,10 @@ function SessionBlock({ week, session }: { week: number; session: Session }) {
         )}
 
         <div className="mt-5">
-          <h4 className={`font-mono text-sm ${testDay ? "text-bg/70" : "text-ink-2"}`}>
+          <h4 className={`font-mono text-sm ${testDay ? "text-on-dark/70" : "text-ink-2"}`}>
             Routine mentale du jour
           </h4>
-          <p className={`mt-1.5 max-w-[60ch] leading-relaxed ${testDay ? "text-bg" : ""}`}>
+          <p className={`mt-1.5 max-w-[60ch] leading-relaxed ${testDay ? "text-on-dark" : ""}`}>
             {session.mental}
           </p>
         </div>
@@ -187,7 +187,7 @@ function SessionBlock({ week, session }: { week: number; session: Session }) {
         {testDay && (
           <Link
             href="/suivi"
-            className="mt-6 inline-flex h-12 items-center gap-2 rounded bg-bg px-6 font-semibold text-ink transition-transform duration-150 hover:bg-bg/85 active:scale-[0.98]"
+            className="mt-6 inline-flex h-12 items-center gap-2 rounded bg-on-dark px-6 font-semibold text-surface-dark transition-transform duration-150 hover:bg-on-dark/85 active:scale-[0.98]"
           >
             Entrer tes résultats
             <ArrowRightIcon size={18} weight="regular" aria-hidden />

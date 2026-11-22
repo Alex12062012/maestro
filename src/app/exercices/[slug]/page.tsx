@@ -205,15 +205,15 @@ function Visual({ exercise }: { exercise: Exercise }) {
 
 function Dose({ dose }: { dose: string }) {
   return (
-    <section aria-labelledby="dose" className="on-dark rounded bg-surface-dark px-5 py-5 text-bg">
-      <h2 id="dose" className="text-sm font-semibold tracking-[0.04em] text-bg/70 uppercase">
+    <section aria-labelledby="dose" className="on-dark rounded bg-surface-dark px-5 py-5 text-on-dark">
+      <h2 id="dose" className="text-sm font-semibold tracking-[0.04em] text-on-dark/70 uppercase">
         Dose
       </h2>
       <ul className="mt-3 font-mono text-sm leading-relaxed">
         {doseLines(dose).map((line, i) => (
-          <li key={i} className="border-t border-bg/15 py-2.5 first:border-0 first:pt-0">
-            {line.label && <span className="block text-bg/60">{line.label}</span>}
-            <span className={line.label ? "mt-0.5 block" : "block text-bg/80"}>{line.value}</span>
+          <li key={i} className="border-t border-on-dark/15 py-2.5 first:border-0 first:pt-0">
+            {line.label && <span className="block text-on-dark/60">{line.label}</span>}
+            <span className={line.label ? "mt-0.5 block" : "block text-on-dark/80"}>{line.value}</span>
           </li>
         ))}
       </ul>

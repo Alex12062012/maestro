@@ -51,7 +51,7 @@ export function Radar({
       aria-label={`Radar de tes 4 piliers sur 100 : ${summary}`}
       className={className}
     >
-      <g fill="none" stroke="var(--bg)" strokeWidth="1">
+      <g fill="none" stroke="var(--on-dark)" strokeWidth="1">
         {[25, 50, 75].map((v) => (
           <polygon key={v} points={ring(v)} strokeOpacity="0.14" />
         ))}
@@ -80,7 +80,7 @@ export function Radar({
         })}
       </g>
 
-      <g className="font-mono" fontSize="14" letterSpacing="0.06em" fill="var(--bg)">
+      <g className="font-mono" fontSize="14" letterSpacing="0.06em" fill="var(--on-dark)">
         {PILLARS.map((p) => (
           <text
             key={p}
