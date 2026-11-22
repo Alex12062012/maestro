@@ -104,6 +104,38 @@ a {
   animation: menu-in 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Test : passage d'une question à l'autre. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-rise-in {
+  animation: rise-in 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Radar du résultat : la forme part du centre, en même temps que les chiffres. */
+@keyframes radar-in {
+  from {
+    opacity: 0;
+    transform: scale(0.15);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-radar-in {
+  animation: radar-in 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,
