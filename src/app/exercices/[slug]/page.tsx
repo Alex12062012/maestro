@@ -127,7 +127,7 @@ export default async function ExercisePage({ params }: PageProps<"/exercices/[sl
             </h2>
             <p className="mt-2 text-ink-2">
               {usedDays.length > 0
-                ? `Au programme ${listFr(usedDays.map((d) => `le ${d}`))}, les semaines en noir.`
+                ? `Au programme ${listFr(usedDays.map((d) => `le ${d}`))}, les semaines en case pleine.`
                 : "Cet exercice n'est dans aucune séance pour l'instant."}
             </p>
             <ol className="mt-4 grid grid-cols-6 gap-1 sm:grid-cols-12">
