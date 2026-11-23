@@ -1,4 +1,4 @@
-import { statSync } from "node:fs";
+import { readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import sharp from "sharp";
 import { describe, expect, it } from "vitest";
@@ -190,6 +190,24 @@ describe("PHOTOS", () => {
       expect([info.width, info.height], src).toEqual([meta.width, meta.height]);
       expect(Math.max(meta.width, meta.height), src).toBeLessThanOrEqual(1600);
       expect(statSync(file).size, src).toBeLessThanOrEqual(250 * 1024);
+    }
+  });
+});
+
+describe("SOURCES.md", () => {
+  // Une ligne de tableau par photo : | fichier.jpg | photographe | page source |
+  const md = readFileSync(join(process.cwd(), "public", "photos", "SOURCES.md"), "utf8");
+  const rows = [...md.matchAll(/^\| (\S+\.jpg) \| ([^|]+?) \| (https:\/\/\S+) \|\r?$/gm)].map(
+    ([, file, credit, source]) => ({ file, credit, source }),
+  );
+
+  it("chaque photo du site a sa ligne, avec le même photographe et la même page source", () => {
+    expect(rows).toHaveLength(Object.keys(PHOTOS).length);
+    for (const [src, meta] of Object.entries(PHOTOS)) {
+      const row = rows.find((r) => src.endsWith(`/${r.file}`));
+      expect(row, src).toBeDefined();
+      expect(row?.credit, src).toBe(meta.credit);
+      expect(row?.source, src).toBe(meta.source);
     }
   });
 });

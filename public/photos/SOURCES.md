@@ -6,11 +6,26 @@ modification autorisée, attribution non obligatoire. Interdits : vendre les
 photos sans modification, laisser croire qu'une personne ou une marque visible
 soutient le site, montrer une personne identifiable sous un jour offensant.
 
-Fichiers téléchargés le 22/11/2026, redimensionnés à 1600 px maximum sur le
-grand côté et recompressés (250 Ko maximum). Aucune photo n'est chargée depuis
+Fichiers redimensionnés à 1600 px maximum sur le grand côté et recompressés
+(250 Ko maximum). Aucune photo n'est chargée depuis
 un site externe.
 
+## Accueil (`public/photos/accueil/`)
+
+Téléchargées le 23/11/2026, mêmes traitements. Licence revérifiée le même
+jour sur https://www.pexels.com/license/.
+
+| Fichier | Photographe | Page source |
+|---|---|---|
+| hero-volee.jpg | William Larsen | https://www.pexels.com/photo/a-man-playing-football-11916079/ |
+| technique-passe.jpg | Alexander Nadrilyanski | https://www.pexels.com/photo/photo-of-a-boy-kicking-a-soccer-ball-7307483/ |
+
+Les piliers Physique, Mental et Vision de l'accueil reprennent des photos des
+exercices : squats.jpg, visualisation.jpg et analyse-video-poste.jpg.
+
 ## Exercices (`public/photos/exercices/`)
+
+Téléchargées le 22/11/2026.
 
 | Fichier | Photographe | Page source |
 |---|---|---|

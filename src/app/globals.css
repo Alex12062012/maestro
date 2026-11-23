@@ -197,6 +197,15 @@ a {
   animation: terrain-draw 650ms cubic-bezier(0.65, 0, 0.35, 1) both;
 }
 
+/* Accueil : apparition au scroll (Motion, styles en ligne). Sous "réduire les
+   animations" ou sans JavaScript, le contenu est là tout de suite, immobile. */
+@media (prefers-reduced-motion: reduce), (scripting: none) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .terrain-draw {
     animation: none;
