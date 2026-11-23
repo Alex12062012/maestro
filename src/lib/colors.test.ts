@@ -66,6 +66,10 @@ describe.each([
     expect(ratio(rgb(fg), rgb(bg))).toBeGreaterThanOrEqual(min);
   });
 
+  it("panneaux / fond : assez d'écart pour que les sections se distinguent", () => {
+    expect(ratio(rgb(t["surface-dark"]), rgb(t.bg))).toBeGreaterThanOrEqual(1.25);
+  });
+
   it("on-dark à 60 % / surface-dark (texte secondaire des panneaux)", () => {
     const s = t["surface-dark"];
     expect(ratio(mix(t["on-dark"], s, 0.6), rgb(s))).toBeGreaterThanOrEqual(4.5);

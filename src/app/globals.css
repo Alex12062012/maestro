@@ -11,13 +11,15 @@
   - --blue : graphiques sur le fond ; --blue-on-dark : graphiques sur panneau.
 */
 :root {
-  --bg: #0f1211;
+  /* Fond et panneaux assez séparés (environ 1,3:1) pour garder le rythme des
+     sections anthracite en thème sombre. */
+  --bg: #0c0f0e;
   --ink: #e8ece9;
   --ink-2: #a7afab;
-  --surface-dark: #181c1a;
+  --surface-dark: #232927;
   --on-dark: #e8ece9;
   --line: #2a302d;
-  --panel-edge: #2a302d;
+  --panel-edge: #343b38;
   --signal: #c8f03c;
   --blue: #5b82e8;
   --blue-on-dark: #5b82e8;
