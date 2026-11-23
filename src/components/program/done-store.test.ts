@@ -1,4 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { DAYS, sessionId } from "@/content/program";
+
+// Compteur anonyme : on regarde seulement ce qui partirait.
+const send = vi.hoisted(() => vi.fn());
+vi.mock("@vercel/analytics", () => ({ track: send }));
 
 // Le magasin garde son état au niveau du module : on le recharge à chaque test.
 async function freshStore() {
@@ -13,6 +18,7 @@ describe("done-store", () => {
   let win: EventTarget;
 
   beforeEach(() => {
+    send.mockReset();
     store.clear();
     win = new EventTarget();
     vi.stubGlobal("window", win);
@@ -95,5 +101,34 @@ describe("done-store", () => {
     expect(changedThisVisit(doneStore.getSnapshot())).toBe(false);
     toggleExerciseDone("w1-lundi", "gainage-planche");
     expect(changedThisVisit(doneStore.getSnapshot())).toBe(true);
+  });
+  it("semaine finie pendant la visite : week_done part une fois, sans propriété", async () => {
+    const { toggleDayDone } = await freshStore();
+    for (const d of DAYS.slice(0, 6)) toggleDayDone(sessionId(1, d));
+    expect(send).not.toHaveBeenCalled();
+    toggleDayDone(sessionId(1, DAYS[6]));
+    expect(send.mock.calls).toEqual([["week_done"]]);
+    // Décocher puis recocher le dernier jour ne compte pas une deuxième fois.
+    toggleDayDone(sessionId(1, DAYS[6]));
+    toggleDayDone(sessionId(1, DAYS[6]));
+    expect(send).toHaveBeenCalledTimes(1);
+  });
+
+  it("semaine déjà finie au chargement : rien ne part", async () => {
+    store.set("maestro:v1:done", JSON.stringify(DAYS.map((d) => sessionId(2, d))));
+    const { doneStore, toggleExerciseDone } = await freshStore();
+    expect(doneStore.getSnapshot().days).toHaveLength(7);
+    toggleExerciseDone("w1-lundi", "gainage-planche");
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("envoi en erreur : la case se coche quand même, sans erreur", async () => {
+    send.mockImplementation(() => {
+      throw new Error("bloqué");
+    });
+    const { doneStore, toggleDayDone } = await freshStore();
+    for (const d of DAYS.slice(0, 6)) toggleDayDone(sessionId(3, d));
+    expect(() => toggleDayDone(sessionId(3, DAYS[6]))).not.toThrow();
+    expect(doneStore.getSnapshot().days).toHaveLength(7);
   });
 });

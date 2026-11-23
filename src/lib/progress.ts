@@ -50,6 +50,13 @@ export function weekProgress(done: string[], week: number): number {
   return DAYS.filter((d) => done.includes(sessionId(week, d))).length;
 }
 
+/** Semaines dont toutes les journées sont faites dans `after` et pas dans `before`. */
+export function finishedWeeks(before: string[], after: string[]): number[] {
+  return PROGRAM.map((w) => w.week).filter(
+    (w) => weekProgress(before, w) < DAYS.length && weekProgress(after, w) === DAYS.length,
+  );
+}
+
 export function isDayDone(p: Progress, session: string): boolean {
   return p.days.includes(session);
 }

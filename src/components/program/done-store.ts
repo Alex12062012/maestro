@@ -1,12 +1,14 @@
 import { useSyncExternalStore } from "react";
 import {
   EMPTY_PROGRESS,
+  finishedWeeks,
   readProgress,
   toggleDay,
   toggleExercise,
   writeProgress,
   type Progress,
 } from "@/lib/progress";
+import { trackOnce } from "@/lib/track";
 
 // Progression (journées et exercices cochés), partagée entre tous les
 // composants de la page. Lue une fois dans le navigateur, puis gardée en
@@ -59,9 +61,12 @@ export function useProgress(): Progress {
 }
 
 function update(next: Progress) {
-  if (next === current) return;
+  const before = getSnapshot();
+  if (next === before) return;
   current = next;
   writeProgress(next);
+  // Compteur anonyme : une semaine finie ici, une seule fois par semaine.
+  for (const week of finishedWeeks(before.days, next.days)) trackOnce("week_done", `week_done:${week}`);
   emit();
 }
 

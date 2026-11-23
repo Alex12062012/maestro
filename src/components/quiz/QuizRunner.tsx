@@ -22,6 +22,7 @@ import {
 } from "@/lib/quiz";
 import { QuizResult } from "@/components/quiz/QuizResult";
 import { pad2 } from "@/lib/format";
+import { track } from "@/lib/track";
 
 const TOTAL = QUESTIONS.length;
 
@@ -81,6 +82,9 @@ function Quiz() {
     const id = QUESTIONS[state.current].id;
     const next = { answers: { ...state.answers, [id]: value }, current: state.current + 1 };
     writeQuiz(next);
+    // Compteur anonyme : une fois par test fini, au moment où le résultat
+    // s'affiche (pas à chaque rendu, ni quand on revient voir son résultat).
+    if (isComplete(next)) track("test_done");
     go(next);
   }
 

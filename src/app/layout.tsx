@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { NavTracker } from "@/components/nav/NavTracker";
@@ -48,6 +49,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </main>
         <SiteFooter />
         <NavTracker />
+        {/* Mesure d'audience anonyme, sans cookie (voir /confidentialite). */}
+        <Analytics />
       </body>
     </html>
   );

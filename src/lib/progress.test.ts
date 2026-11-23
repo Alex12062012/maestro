@@ -4,6 +4,7 @@ import { PROGRAM } from "@/content/program";
 import {
   EMPTY_PROGRESS,
   exerciseId,
+  finishedWeeks,
   isDayDone,
   isExerciseDone,
   normalizeProgress,
@@ -61,6 +62,24 @@ describe("weekProgress", () => {
 
   it("ignore les identifiants qui ne sont pas des séances", () => {
     expect(weekProgress(["w1-", "w1-lundi-bis", "w1-funday", "W1-lundi"], 1)).toBe(0);
+  });
+});
+
+describe("finishedWeeks", () => {
+  const week = (n: number) => DAYS.map((d) => sessionId(n, d));
+
+  it("donne la semaine dont la dernière journée vient d'être faite", () => {
+    const before = week(3).slice(0, 6);
+    expect(finishedWeeks(before, week(3))).toEqual([3]);
+  });
+
+  it("rien quand la semaine était déjà finie ou ne l'est pas encore", () => {
+    expect(finishedWeeks(week(3), [...week(3), "w4-lundi"])).toEqual([]);
+    expect(finishedWeeks([], ["w5-lundi", "w5-mardi"])).toEqual([]);
+  });
+
+  it("rien quand une journée est décochée", () => {
+    expect(finishedWeeks(week(2), week(2).slice(1))).toEqual([]);
   });
 });
 

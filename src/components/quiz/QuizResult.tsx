@@ -6,6 +6,7 @@ import { Button, ButtonLink } from "@/components/Button";
 import { Radar } from "@/components/charts/Radar";
 import { PILLARS, PILLAR_LABELS, PROFILES } from "@/content/quiz";
 import { resultHighlights, type QuizResult as Result } from "@/lib/quiz";
+import { trackOnce } from "@/lib/track";
 
 function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -145,7 +146,8 @@ export function QuizResult({
       </div>
 
       <div className="mt-12 flex flex-wrap gap-3">
-        <ButtonLink href="/programme">
+        {/* Compteur anonyme : seul le premier clic de ce navigateur compte. */}
+        <ButtonLink href="/programme" onClick={() => trackOnce("program_started")}>
           Commencer le programme
           <ArrowRightIcon size={18} weight="regular" aria-hidden />
         </ButtonLink>
