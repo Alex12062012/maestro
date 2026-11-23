@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 const HOME: Record<string, string> = {
   "/photos/accueil/hero-volee.jpg": "Accueil, en haut de page",
   "/photos/accueil/technique-passe.jpg": "Accueil, pilier Technique",
+  "/photos/accueil/vision-regard.jpg": "Accueil, pilier Vision",
 };
 
 /** Où la photo apparaît : la fiche d'exercice qui l'utilise, ou l'accueil. */
@@ -39,8 +40,8 @@ export default function MentionsLegales() {
       <div className="mt-12 grid max-w-[68ch] gap-12 md:mt-16">
         <Section title="Éditeur">
           <p>Ce site est édité par [nom de l&apos;éditeur].</p>
-          <p>Responsable de la publication : [nom de l&apos;éditeur].</p>
-          <p>Contact : [contact]</p>
+          <p>Responsable de la publication : [nom de l&apos;éditeur].</p>
+          <p>Contact : [contact]</p>
         </Section>
 
         <Section title="Hébergement">
@@ -54,7 +55,7 @@ export default function MentionsLegales() {
             <span className="block">États-Unis</span>
           </address>
           <p>
-            Site :{" "}
+            Site :{" "}
             <a href="https://vercel.com" className="underline decoration-line hover:decoration-ink">
               vercel.com
             </a>
@@ -70,7 +71,7 @@ export default function MentionsLegales() {
             >
               licence Pexels
             </a>
-            . Les schémas d&apos;exercices ont été dessinés pour MAESTRO.
+            . Les schémas d’exercices ont été dessinés pour MAESTRO.
           </p>
           <ul className="divide-y divide-line border-y border-line">
             {Object.entries(PHOTOS).map(([src, meta]) => (

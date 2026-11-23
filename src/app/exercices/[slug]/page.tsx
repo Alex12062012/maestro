@@ -127,8 +127,8 @@ export default async function ExercisePage({ params }: PageProps<"/exercices/[sl
             </h2>
             <p className="mt-2 text-ink-2">
               {usedDays.length > 0
-                ? `Au programme ${listFr(usedDays.map((d) => `le ${d}`))}, les semaines en case pleine.`
-                : "Cet exercice n'est dans aucune séance pour l'instant."}
+                ? `Au programme ${listFr(usedDays.map((d) => `le ${d}`))}. Les semaines où il apparaît sont en case pleine ci-dessous.`
+                : "Cet exercice n’est dans aucune séance pour l’instant."}
             </p>
             <ol className="mt-4 grid grid-cols-6 gap-1 sm:grid-cols-12">
               {weeks.map(({ week, days }) => (
@@ -136,7 +136,7 @@ export default async function ExercisePage({ params }: PageProps<"/exercices/[sl
                   {days.length > 0 ? (
                     <Link
                       href={`/programme/semaine/${week}`}
-                      aria-label={`Semaine ${week} : ${listFr([...days])}`}
+                      aria-label={`Semaine ${week} : ${listFr([...days])}`}
                       className="flex h-11 items-center justify-center rounded bg-ink font-mono text-sm text-bg transition-transform duration-150 hover:bg-ink/85 active:scale-[0.96]"
                     >
                       {pad2(week)}
@@ -197,7 +197,12 @@ function Visual({ exercise }: { exercise: Exercise }) {
       meta={meta}
       sizes="(min-width: 1024px) 448px, (min-width: 768px) 400px, 100vw"
       eager
-      caption={`Photo ${meta.credit}, Pexels`}
+      caption={
+        <>
+          {meta.note && <span className="mb-1 block font-sans text-sm text-ink">{meta.note}</span>}
+          Photo {meta.credit}, Pexels
+        </>
+      }
       className="h-auto w-full rounded bg-line object-cover md:max-h-[58vh]"
     />
   );

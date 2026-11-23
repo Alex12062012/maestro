@@ -58,7 +58,7 @@ export function ProgressChart({
   const ticks = [lo, (lo + hi) / 2, hi];
   const unit = unitSuffix(benchmark.unit);
   const summary = points
-    .map((p) => `semaine ${WEEK_OF[p.cp]} : ${formatNumber(p.value)}${unit}`)
+    .map((p) => `semaine ${WEEK_OF[p.cp]} : ${formatNumber(p.value)}${unit}`)
     .join(", ");
 
   return (

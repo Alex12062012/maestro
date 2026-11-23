@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { EXERCISES, getExercise } from "@/content/exercises";
 import { BENCHMARKS } from "@/content/benchmarks";
 import { PHOTOS } from "@/content/photos";
+import { doseLines } from "@/lib/format";
 import {
   DAYS,
   PHASES,
@@ -194,6 +195,17 @@ describe("PHOTOS", () => {
   });
 });
 
+describe("doses", () => {
+  it("une phrase sans étiquette ne se glisse pas entre deux lignes étiquetées", () => {
+    for (const e of EXERCISES) {
+      const labelled = doseLines(e.dose).map((l) => l.label !== undefined);
+      const firstPlain = labelled.indexOf(false);
+      if (firstPlain === -1) continue;
+      expect(labelled.slice(firstPlain), e.slug).not.toContain(true);
+    }
+  });
+});
+
 describe("SOURCES.md", () => {
   // Une ligne de tableau par photo : | fichier.jpg | photographe | page source |
   const md = readFileSync(join(process.cwd(), "public", "photos", "SOURCES.md"), "utf8");
@@ -230,6 +242,11 @@ describe("textes", () => {
 
   it("aucun emoji", () => {
     expect(all).not.toMatch(/\p{Extended_Pictographic}/u);
+  });
+
+  it("typographie française : espace insécable avant : ; ! ? et apostrophe courbe", () => {
+    expect(all).not.toMatch(/ [:;!?](\s|$)/);
+    expect(all).not.toMatch(/[A-Za-zÀ-ÿ]'[A-Za-zÀ-ÿ]/);
   });
 });
 

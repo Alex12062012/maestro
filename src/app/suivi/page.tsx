@@ -14,11 +14,11 @@ export default function SuiviPage() {
         Suivi
       </h1>
       <p className="mt-5 max-w-[56ch] text-lg leading-relaxed">
-        6 tests de référence, mesurés trois fois : au départ, à mi-parcours et à la fin. Les courbes
-        montrent d&apos;où tu pars et ce qui a bougé.
+        6 tests de référence, mesurés trois fois : au départ, à mi-parcours et à la fin. Les courbes
+        montrent d’où tu pars et ce qui a bougé.
       </p>
       <p className="mt-3 max-w-[56ch] leading-relaxed text-ink-2">
-        Tes résultats restent dans ce navigateur. Rien n&apos;est envoyé, et personne d&apos;autre ne
+        Tes résultats restent dans ce navigateur. Rien n’est envoyé, et personne d’autre ne
         les voit.
       </p>
       <MeasureBoard />

@@ -48,7 +48,7 @@ export function Radar({
     <svg
       viewBox={`0 0 ${W} ${H}`}
       role="img"
-      aria-label={`Radar de tes 4 piliers sur 100 : ${summary}`}
+      aria-label={`Radar de tes 4 piliers sur 100 : ${summary}`}
       className={className}
     >
       <g fill="none" stroke="var(--on-dark)" strokeWidth="1">

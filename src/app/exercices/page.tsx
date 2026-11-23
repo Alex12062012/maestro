@@ -16,14 +16,14 @@ export const instant = false;
 
 export const metadata: Metadata = {
   title: "Exercices - MAESTRO",
-  description: `${EXERCISES.length} fiches d'exercices de foot pour les 13-14 ans, au poids du corps, avec un ballon et quelques plots : technique, physique, mental et vision.`,
+  description: `${EXERCISES.length} fiches d’exercices de foot pour les 13-14 ans, au poids du corps, avec un ballon et quelques plots : technique, physique, mental et vision.`,
 };
 
 const INTRO: Record<Pillar, string> = {
-  technique: "Un ballon, un mur et quelques plots : contrôle, pied faible, conduite et frappe.",
-  physique: "Au poids du corps : démarrages, appuis, gainage, et le retour au calme après l'effort.",
+  technique: "Un ballon, un mur et quelques plots : contrôle, pied faible, conduite et frappe.",
+  physique: "Au poids du corps : démarrages, appuis, gainage, et le retour au calme après l’effort.",
   mental: "Des routines de quelques minutes pour le stress, les erreurs et les jours de match.",
-  vision: "Lever la tête, prendre l'information et choisir la passe avant de recevoir le ballon.",
+  vision: "Lever la tête, prendre l’information et choisir la passe avant de recevoir le ballon.",
 };
 
 function parsePillar(raw: string | string[] | undefined): Pillar | null {

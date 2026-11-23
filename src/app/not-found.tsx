@@ -39,11 +39,11 @@ export default function NotFound() {
           Hors du terrain
         </h1>
         <p className="mt-6 max-w-[44ch] text-lg leading-relaxed text-ink-2">
-          Cette page n&apos;existe pas, ou elle a changé d&apos;adresse. Code
-          d&apos;erreur <span className="font-mono text-ink">404</span>.
+          Cette page n’existe pas, ou elle a changé d’adresse. Code
+          d’erreur <span className="font-mono text-ink">404</span>.
         </p>
         <div className="mt-10 flex flex-wrap gap-3">
-          <ButtonLink href="/">Retour à l&apos;accueil</ButtonLink>
+          <ButtonLink href="/">Retour à l’accueil</ButtonLink>
           <ButtonLink href="/test" variant="secondary">
             Faire le test
             <ArrowRightIcon size={18} weight="regular" aria-hidden />

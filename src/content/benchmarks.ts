@@ -45,7 +45,7 @@ export const BENCHMARKS: Benchmark[] = [
     label: "Sprint 20 m",
     unit: "s",
     better: "lower",
-    how: "Départ debout, après l'échauffement, le meilleur de 2 essais.",
+    how: "Départ debout, après l’échauffement, le meilleur de 2 essais.",
     exercise: "sprints-courts",
   },
   {

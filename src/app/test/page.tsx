@@ -4,7 +4,7 @@ import { QuizRunner } from "@/components/quiz/QuizRunner";
 export const metadata: Metadata = {
   title: "Test Maestro - MAESTRO",
   description:
-    "12 questions pour connaître ton profil de joueur sur 4 piliers : technique, physique, mental et vision. Gratuit, sans inscription, tes réponses restent dans ton navigateur.",
+    "12 questions pour connaître ton profil de joueur sur 4 piliers : technique, physique, mental et vision. Gratuit, sans inscription, tes réponses restent dans ton navigateur.",
 };
 
 export default function TestPage() {
@@ -15,7 +15,7 @@ export default function TestPage() {
       </h1>
       <p className="mt-3 max-w-[62ch] leading-relaxed text-ink-2 md:mt-4 md:text-lg">
         12 questions sur ta technique, ton physique, ton mental et ta vision du jeu. Pense à tes
-        derniers matchs. Tu peux t&apos;arrêter en route, tu reprendras à la même question.
+        derniers matchs. Tu peux t’arrêter en route, tu reprendras à la même question.
       </p>
       <div className="mt-6 border-t border-line pt-5 md:mt-10 md:pt-8">
         <QuizRunner />

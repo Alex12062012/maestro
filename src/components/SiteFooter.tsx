@@ -23,7 +23,7 @@ export function SiteFooter() {
             un suivi médical ou psychologique. Si tu te sens vraiment mal,
             parle-en tout de suite à un adulte de confiance, à ton coach, à tes
             parents, ou à un professionnel de santé. En France, aide en
-            urgence : <Num>3114</Num> (gratuit et confidentiel) ou <Num>15</Num>{" "}
+            urgence : <Num>3114</Num> (gratuit et confidentiel) ou <Num>15</Num>{" "}
             / <Num>112</Num>.
           </p>
         </div>

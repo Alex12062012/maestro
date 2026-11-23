@@ -50,7 +50,7 @@ export function ExerciseCheck({
       }`}
     >
       <Box onDark={onDark} />
-      <span className="sr-only">Fait : {name}</span>
+      <span className="sr-only">Fait : {name}</span>
     </button>
   );
 }
@@ -69,7 +69,7 @@ export function DayCount({
   const n = slugs.filter((slug) => isExerciseDone(p, session, slug)).length;
   return (
     <span className={className}>
-      <span className="sr-only">Exercices faits : </span>
+      <span className="sr-only">Exercices faits : </span>
       {n}/{slugs.length}
     </span>
   );

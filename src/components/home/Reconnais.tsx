@@ -5,26 +5,26 @@ import { Reveal } from "@/components/home/Reveal";
 // réponse renvoie à ce que le programme propose vraiment.
 const SITUATIONS = [
   {
-    text: "Tu es fort à l'entraînement, moins bon en match.",
+    text: "Tu es fort à l’entraînement, moins bon en match.",
     before: "Une ",
-    link: { href: "/exercices/routine-avant-match", label: "routine d'avant-match" },
+    link: { href: "/exercices/routine-avant-match", label: "routine d’avant-match" },
     after: ", toujours la même, et un objectif précis pour chaque match, que tu peux compter.",
   },
   {
     text: "Tu stresses, tu rates, et tu y penses tout le match.",
     before: "La ",
     link: { href: "/exercices/routine-reset", label: "routine RESET" },
-    after: " : quelques secondes pour laisser l'erreur derrière toi et être prêt pour l'action suivante.",
+    after: " : quelques secondes pour laisser l’erreur derrière toi et être prêt pour l’action suivante.",
   },
   {
-    text: "Ton pied faible te trahit, ta finition n'est pas régulière.",
+    text: "Ton pied faible te trahit, ta finition n’est pas régulière.",
     before: "Des séances de ",
     link: { href: "/exercices/pied-faible-mur", label: "pied faible contre le mur" },
     after: " et de frappes cadrées, et un test de finition sur 10 frappes pour voir où tu en es.",
   },
   {
     text: "Tu es remplaçant et tu veux devenir titulaire.",
-    before: "Le programme ne choisit pas l'équipe. Il te donne 12 semaines de séances et des ",
+    before: "Le programme ne choisit pas l’équipe. Il te donne 12 semaines de séances et des ",
     link: { href: "/suivi", label: "tests chiffrés" },
     after: " pour montrer tes progrès à ton coach.",
   },

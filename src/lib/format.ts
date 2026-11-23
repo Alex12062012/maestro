@@ -21,15 +21,18 @@ export function unitSuffix(unit: Unit): string {
   return unit === "s" ? " s" : unit === "/10" ? "/10" : "";
 }
 
-/** "Semaines 1 à 3 : 3 séries de 20." devient une ligne étiquette / valeur. */
+/**
+ * "Semaines 1 à 3 : 3 séries de 20." devient une ligne étiquette / valeur.
+ * L'espace avant les deux-points peut être insécable (typographie française).
+ */
 export function doseLines(dose: string): { label?: string; value: string }[] {
   return dose
     .split(/(?<=\.)\s+/)
     .filter(Boolean)
     .map((sentence) => {
-      const at = sentence.indexOf(" : ");
-      return at === -1
+      const m = /\s:\s/.exec(sentence);
+      return m === null
         ? { value: sentence }
-        : { label: sentence.slice(0, at), value: sentence.slice(at + 3) };
+        : { label: sentence.slice(0, m.index), value: sentence.slice(m.index + m[0].length) };
     });
 }

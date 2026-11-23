@@ -12,7 +12,7 @@ export function EducatorNote({ className }: { className?: string }) {
         <strong className="font-semibold text-ink">
           Relecture par un éducateur sportif recommandée.
         </strong>{" "}
-        Ce programme n&apos;a pas été vérifié par un professionnel : montre-le à ton coach ou à un
+        Ce programme n’a pas été vérifié par un professionnel : montre-le à ton coach ou à un
         éducateur avant de commencer. Une douleur pendant un exercice, tu arrêtes et tu en parles à
         un adulte.
       </p>

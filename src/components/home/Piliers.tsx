@@ -55,8 +55,8 @@ const TILES: Tile[] = [
 
 const VISION: Tile = {
   pillar: "vision",
-  photo: "/photos/exercices/analyse-video-poste.jpg",
-  text: "Regarder par-dessus l'épaule avant de recevoir, conduire tête haute, analyser en vidéo un joueur à ton poste.",
+  photo: "/photos/accueil/vision-regard.jpg",
+  text: "Regarder par-dessus l’épaule avant de recevoir, conduire tête haute, analyser en vidéo un joueur à ton poste.",
   cell: "md:col-span-12",
   frame: "aspect-[4/3] md:aspect-[3/2]",
   sizes: WIDE,

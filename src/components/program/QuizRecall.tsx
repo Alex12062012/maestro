@@ -30,7 +30,7 @@ export function QuizRecall({ className }: { className?: string }) {
           Pas encore de profil
         </h2>
         <p className="mt-3 mb-6 max-w-[44ch] leading-relaxed text-on-dark/80">
-          Le test Maestro te dit quel pilier travailler en premier : 12 questions, une par écran.
+          Le test Maestro te dit quel pilier travailler en premier : 12 questions, une par écran.
           Ton résultat reste dans ce navigateur.
         </p>
         <Link
@@ -50,12 +50,12 @@ export function QuizRecall({ className }: { className?: string }) {
   return (
     <section aria-labelledby="profil" className={frame}>
       <h2 id="profil" className="text-4xl leading-[0.9] font-extrabold uppercase font-stretch-75%">
-        <span className="sr-only">Ton profil : </span>
+        <span className="sr-only">Ton profil : </span>
         {profile.name}
       </h2>
       <p className="mt-2 font-mono text-sm text-on-dark/60">Ton profil au test Maestro</p>
       <p className="mt-5 flex items-baseline justify-between gap-4 border-t border-on-dark/15 pt-4">
-        <span className="text-on-dark/80">À travailler en premier : {PILLAR_LABELS[toWork]}</span>
+        <span className="text-on-dark/80">À travailler en premier : {PILLAR_LABELS[toWork]}</span>
         <span className="font-mono text-2xl text-signal">
           {result.pillars[toWork]}
           <span className="text-base text-on-dark/60">/100</span>

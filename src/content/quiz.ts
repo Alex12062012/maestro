@@ -38,7 +38,7 @@ export const QUESTIONS: Question[] = [
   {
     id: "demarrage",
     pillar: "physique",
-    text: "Sur un démarrage, je prends un mètre d'avance sur mon adversaire direct.",
+    text: "Sur un démarrage, je prends un mètre d’avance sur mon adversaire direct.",
     reversed: false,
   },
   {
@@ -56,25 +56,25 @@ export const QUESTIONS: Question[] = [
   {
     id: "pied-faible",
     pillar: "technique",
-    text: "J'évite de jouer du pied faible, même quand c'est lui qui est le mieux placé.",
+    text: "J’évite de jouer du pied faible, même quand c’est lui qui est le mieux placé.",
     reversed: true,
   },
   {
     id: "fin-de-match",
     pillar: "physique",
-    text: "Dans les dix dernières minutes du match, j'ai encore les jambes pour sprinter.",
+    text: "Dans les dix dernières minutes du match, j’ai encore les jambes pour sprinter.",
     reversed: false,
   },
   {
     id: "erreur",
     pillar: "mental",
-    text: "Après une erreur, j'y pense encore plusieurs actions plus tard.",
+    text: "Après une erreur, j’y pense encore plusieurs actions plus tard.",
     reversed: true,
   },
   {
     id: "solution",
     pillar: "vision",
-    text: "Quand le ballon m'arrive, je sais déjà ce que je vais en faire.",
+    text: "Quand le ballon m’arrive, je sais déjà ce que je vais en faire.",
     reversed: false,
   },
   {
@@ -122,14 +122,14 @@ export const PROFILES: Record<ProfileId, Profile> = {
     summary:
       "Tes quatre piliers sont à 75 ou plus. Les 12 semaines vont servir à tenir ce niveau contre des adversaires plus forts.",
     strength:
-      "D'après tes réponses, tes quatre piliers sont tous à 75 ou plus.",
+      "D’après tes réponses, tes quatre piliers sont tous à 75 ou plus.",
     focus:
-      "Suis le programme complet en commençant par le pilier affiché ici, et passe à la version plus dure d'un exercice dès qu'il devient facile.",
+      "Suis le programme complet en commençant par le pilier affiché ici, et passe à la version plus dure d’un exercice dès qu’il devient facile.",
   },
   technique: {
     name: "Le Combattant",
     summary:
-      "Ton score le plus bas est en technique. Le ballon ne fait pas encore toujours ce que tu veux : un contrôle qui rebondit trop loin, une passe qui part à côté.",
+      "Ton score le plus bas est en technique. Le ballon ne fait pas encore toujours ce que tu veux : un contrôle qui rebondit trop loin, une passe qui part à côté.",
     strength:
       "Ton physique, ton mental et ta vision sont au moins au niveau de ta technique. Pendant que tu la travailles, appuie-toi sur le plus haut des trois.",
     focus:
@@ -138,14 +138,14 @@ export const PROFILES: Record<ProfileId, Profile> = {
   physique: {
     name: "Le Technicien",
     summary:
-      "Ton score le plus bas est en physique : d'après tes réponses, c'est dans les courses et en fin de match que tu perds le plus de terrain.",
+      "Ton score le plus bas est en physique : d’après tes réponses, c’est dans les courses et en fin de match que tu perds le plus de terrain.",
     strength:
       "Ta technique, ton mental et ta vision sont au moins au niveau de ton physique. Appuie-toi sur le plus haut des trois pendant que les séances du mardi travaillent ton physique.",
     focus:
-      "Sprints courts, appuis, gainage et squats, au poids du corps. C'est la séance du mardi, et elle monte un peu chaque semaine.",
+      "Sprints courts, appuis, gainage et squats, au poids du corps. C’est la séance du mardi, et elle monte un peu chaque semaine.",
   },
   mental: {
-    name: "L'Artiste",
+    name: "L’Artiste",
     summary:
       "Ton score le plus bas est en mental. Un match important ou une erreur peuvent te faire jouer en dessous de ton niveau.",
     strength:
@@ -156,10 +156,10 @@ export const PROFILES: Record<ProfileId, Profile> = {
   vision: {
     name: "Le Soliste",
     summary:
-      "Ton score le plus bas est en vision : d'après tes réponses, lever la tête pour voir le coéquipier libre est ce qui te manque le plus.",
+      "Ton score le plus bas est en vision : d’après tes réponses, lever la tête pour voir le coéquipier libre est ce qui te manque le plus.",
     strength:
       "Ta technique, ton physique et ton mental sont au moins au niveau de ta vision. Appuie-toi sur le plus haut des trois pendant que tu apprends à lever la tête.",
     focus:
-      "Regarder par-dessus l'épaule avant chaque réception, conduire tête haute, analyser en vidéo un joueur à ton poste. C'est la séance du mercredi.",
+      "Regarder par-dessus l’épaule avant chaque réception, conduire tête haute, analyser en vidéo un joueur à ton poste. C’est la séance du mercredi.",
   },
 };

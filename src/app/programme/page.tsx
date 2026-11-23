@@ -10,7 +10,7 @@ import { pad2 } from "@/lib/format";
 export const metadata: Metadata = {
   title: "Programme 12 semaines - MAESTRO",
   description:
-    "Le programme MAESTRO : 12 semaines en 4 phases, une séance par jour du lundi au dimanche, au poids du corps et adaptée aux 13-14 ans.",
+    "Le programme MAESTRO : 12 semaines en 4 phases, une séance par jour du lundi au dimanche, au poids du corps et adaptée aux 13-14 ans.",
 };
 
 
@@ -31,10 +31,10 @@ export default function ProgrammePage() {
           </h1>
           <p className="mt-5 max-w-[52ch] text-lg leading-relaxed">
             12 semaines en 4 phases, une séance par jour. Entre 10 et 35 minutes, au poids du corps,
-            avec un ballon et quelques plots. Le samedi, c&apos;est le match.
+            avec un ballon et quelques plots. Le samedi, c’est le match.
           </p>
           <p className="mt-3 max-w-[52ch] leading-relaxed text-ink-2">
-            Coche chaque séance faite dans sa semaine : ta progression reste dans ce navigateur, sans
+            Coche chaque séance faite dans sa semaine : ta progression reste dans ce navigateur, sans
             compte.
           </p>
         </div>

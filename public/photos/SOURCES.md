@@ -19,9 +19,12 @@ jour sur https://www.pexels.com/license/.
 |---|---|---|
 | hero-volee.jpg | William Larsen | https://www.pexels.com/photo/a-man-playing-football-11916079/ |
 | technique-passe.jpg | Alexander Nadrilyanski | https://www.pexels.com/photo/photo-of-a-boy-kicking-a-soccer-ball-7307483/ |
+| vision-regard.jpg | Kampus Production | https://www.pexels.com/photo/a-boy-standing-near-the-ball-8941614/ |
 
-Les piliers Physique, Mental et Vision de l'accueil reprennent des photos des
-exercices : squats.jpg, visualisation.jpg et analyse-video-poste.jpg.
+vision-regard.jpg ajoutée le 23/11/2026 après la revue finale (elle remplace,
+sur l'accueil, la photo d'analyse vidéo, trop adulte pour le pilier Vision).
+Les piliers Physique et Mental de l'accueil reprennent des photos des
+exercices : squats.jpg et visualisation.jpg.
 
 ## Exercices (`public/photos/exercices/`)
 

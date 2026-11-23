@@ -35,12 +35,19 @@ describe("doseLines", () => {
   it("une ligne par phrase, étiquette avant le deux-points", () => {
     expect(
       doseLines(
-        "Semaines 1 à 3 : 3 séries de 20 contrôles. Semaines 4 à 12 : 4 séries. 1 minute de pause entre les séries.",
+        "Semaines 1 à 3 : 3 séries de 20 contrôles. Semaines 4 à 12 : 4 séries. 1 minute de pause entre les séries.",
       ),
     ).toEqual([
       { label: "Semaines 1 à 3", value: "3 séries de 20 contrôles." },
       { label: "Semaines 4 à 12", value: "4 séries." },
       { value: "1 minute de pause entre les séries." },
+    ]);
+  });
+
+  it("accepte une espace insécable avant le deux-points", () => {
+    expect(doseLines("Semaines 1 à 3\u00a0: 3 séries. Test\u00a0: 2 essais.")).toEqual([
+      { label: "Semaines 1 à 3", value: "3 séries." },
+      { label: "Test", value: "2 essais." },
     ]);
   });
 

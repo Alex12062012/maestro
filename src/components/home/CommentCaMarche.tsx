@@ -79,7 +79,7 @@ const STEPS = [
     offset: "",
   },
   {
-    verb: "S'entraîner",
+    verb: "S’entraîner",
     text: `Une séance par jour, de ${MIN} à ${MAX} minutes, au poids du corps et avec un ballon. Chaque exercice a sa fiche.`,
     data: <PhaseRuler />,
     link: { href: "/programme", label: "Voir le programme" },
@@ -87,7 +87,7 @@ const STEPS = [
   },
   {
     verb: "Mesurer",
-    text: `${BENCHMARKS.length} tests aux semaines ${TEST_WEEKS.slice(0, -1).join(", ")} et ${TEST_WEEKS.at(-1)}. Tes résultats s'affichent en courbes, à côté de ton point de départ.`,
+    text: `${BENCHMARKS.length} tests aux semaines ${TEST_WEEKS.slice(0, -1).join(", ")} et ${TEST_WEEKS.at(-1)}. Tes résultats s’affichent en courbes, à côté de ton point de départ.`,
     data: <TestRuler />,
     link: { href: "/suivi", label: "Ouvrir le suivi" },
     offset: "lg:mt-40",

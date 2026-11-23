@@ -46,7 +46,7 @@ export default async function WeekPage({ params }: PageProps<"/programme/semaine
 
   return (
     <div className="mx-auto w-full max-w-6xl flex-1 px-5 pt-6 pb-20 md:px-8 md:pt-10 md:pb-28">
-      <nav aria-label="Fil d'Ariane" className="font-mono text-sm text-ink-2">
+      <nav aria-label="Fil d’Ariane" className="font-mono text-sm text-ink-2">
         <Link href="/programme" className="inline-flex h-11 items-center gap-2 hover:text-ink">
           <ArrowLeftIcon size={16} weight="regular" aria-hidden />
           Programme
@@ -66,7 +66,7 @@ export default async function WeekPage({ params }: PageProps<"/programme/semaine
       </header>
 
       <p className="mt-6 max-w-[62ch] border-t border-line pt-4 text-[0.9375rem] leading-relaxed text-ink-2">
-        Entraînement au club ce jour-là : la séance du club remplace celle d&apos;ici, garde
+        Entraînement au club ce jour-là : la séance du club remplace celle d’ici, garde
         seulement la routine mentale.{" "}
         <Link href="/programme#regles" className="underline hover:text-ink">
           Les règles du programme

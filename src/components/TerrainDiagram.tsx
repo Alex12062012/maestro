@@ -89,7 +89,7 @@ export function describeDiagram(d: Diagram): string {
     const n = d.paths.filter((p) => p.kind === kind).length;
     if (n) parts.push(count(n, KIND_LABEL[kind]));
   }
-  return `Schéma vu de dessus${d.wall ? ", le mur en haut" : ""} : ${parts.join(", ")}.`;
+  return `Schéma vu de dessus${d.wall ? ", le mur en haut" : ""} : ${parts.join(", ")}.`;
 }
 
 export function TerrainDiagram({

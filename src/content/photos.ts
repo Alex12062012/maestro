@@ -11,6 +11,8 @@ export type PhotoMeta = {
   credit: string;
   /** Page de la photo chez Pexels, citée dans les mentions légales. */
   source: string;
+  /** Précision affichée sous la photo, quand elle diffère des consignes de la fiche. */
+  note?: string;
 };
 
 export const PHOTOS: Record<string, PhotoMeta> = {
@@ -27,6 +29,7 @@ export const PHOTOS: Record<string, PhotoMeta> = {
     alt: "Un sportif en gainage latéral sur un court extérieur, en appui sur une main, le bras du dessus tendu vers le ciel.",
     credit: "Göksun Barış Gökalp",
     source: "https://www.pexels.com/photo/man-practicing-yoga-on-outdoor-tennis-court-35225473/",
+    note: "Sur la photo : la version sur la main, plus dure. Commence sur l’avant-bras, comme dans les étapes.",
   },
   "/photos/exercices/squats.jpg": {
     width: 1067,
@@ -45,7 +48,7 @@ export const PHOTOS: Record<string, PhotoMeta> = {
   "/photos/exercices/retour-au-calme.jpg": {
     width: 1600,
     height: 1067,
-    alt: "Un joueur assis sur un terrain synthétique, penché sur sa jambe tendue, étire l'arrière de sa cuisse.",
+    alt: "Un joueur assis sur un terrain synthétique, penché sur sa jambe tendue, étire l’arrière de sa cuisse.",
     credit: "RDNE Stock project",
     source: "https://www.pexels.com/photo/an-active-man-stretching-his-body-7188053/",
   },
@@ -73,14 +76,14 @@ export const PHOTOS: Record<string, PhotoMeta> = {
   "/photos/exercices/routine-avant-match.jpg": {
     width: 1067,
     height: 1600,
-    alt: "Une joueuse lace ses crampons sur le banc du vestiaire, son sac prêt à côté d'elle.",
+    alt: "Une joueuse lace ses crampons sur le banc du vestiaire, son sac prêt à côté d’elle.",
     credit: "Anastasia Shuraeva",
     source: "https://www.pexels.com/photo/football-player-sitting-on-a-bench-9442076/",
   },
   "/photos/exercices/phrases-confiance.jpg": {
     width: 1600,
     height: 1067,
-    alt: "Un élève assis en tailleur écrit dans un cahier, au bord d'un terrain.",
+    alt: "Un élève assis en tailleur écrit dans un cahier, au bord d’un terrain.",
     credit: "Mary Taylor",
     source: "https://www.pexels.com/photo/crop-ethnic-pupil-doing-homework-in-schoolyard-5896749/",
   },
@@ -115,8 +118,15 @@ export const PHOTOS: Record<string, PhotoMeta> = {
   "/photos/accueil/technique-passe.jpg": {
     width: 1600,
     height: 1065,
-    alt: "Un jeune joueur en maillot bleu frappe le ballon de l'intérieur du pied sur un terrain synthétique.",
+    alt: "Un jeune joueur en maillot bleu frappe le ballon de l’intérieur du pied sur un terrain synthétique.",
     credit: "Alexander Nadrilyanski",
     source: "https://www.pexels.com/photo/photo-of-a-boy-kicking-a-soccer-ball-7307483/",
+  },
+  "/photos/accueil/vision-regard.jpg": {
+    width: 1600,
+    height: 1067,
+    alt: "Un jeune joueur en maillot turquoise, le ballon à ses pieds, lève la tête vers ses coéquipiers avant de jouer.",
+    credit: "Kampus Production",
+    source: "https://www.pexels.com/photo/a-boy-standing-near-the-ball-8941614/",
   },
 };

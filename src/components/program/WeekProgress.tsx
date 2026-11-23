@@ -22,8 +22,8 @@ export function WeekProgress({
     count < 7
       ? ""
       : week < PROGRAM.length
-        ? `Semaine ${week} terminée. La semaine ${week + 1} t'attend.`
-        : "Semaine 12 terminée : tu as fait tout le programme.";
+        ? `Semaine ${week} terminée. La semaine ${week + 1} t’attend.`
+        : "Semaine 12 terminée : tu as fait tout le programme.";
   // Annoncé seulement après une case cochée pendant la visite, pas à
   // l'arrivée sur une semaine déjà finie (le texte reste visible).
   const live = changedThisVisit(progress);
@@ -42,7 +42,7 @@ export function WeekProgress({
           ))}
         </ol>
         <p className={`font-mono ${large ? "text-3xl" : "text-sm"}`}>
-          <span className="sr-only">Séances faites : </span>
+          <span className="sr-only">Séances faites : </span>
           {count}
           <span className="text-ink-2">/7</span>
         </p>
