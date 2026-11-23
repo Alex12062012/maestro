@@ -24,12 +24,13 @@ describe("accueil", () => {
     for (const label of toTest) expect(label).toBe("Faire le test");
   });
 
-  it("la photo du haut se charge tout de suite (preload), les autres en différé", () => {
+  it("la photo du haut se charge tout de suite, en priorité haute ; les autres en différé", () => {
     const imgs = [...html.matchAll(/<img\b[^>]*>/g)].map((m) => m[0]);
     expect(imgs).toHaveLength(5);
     const eager = imgs.filter((i) => !/loading="lazy"/.test(i));
     expect(eager).toHaveLength(1);
     expect(eager[0]).toContain("hero-volee.jpg");
+    expect(eager[0]).toMatch(/fetchpriority="high"/i);
   });
 
   it("le bloc parents vouvoie, le reste de la page tutoie", () => {

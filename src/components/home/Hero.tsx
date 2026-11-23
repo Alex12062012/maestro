@@ -8,6 +8,8 @@ const PHOTO = "/photos/accueil/hero-volee.jpg";
 
 // Accueil, premier écran : titre, une phrase, le bouton du test à gauche,
 // la photo à droite. Rien n'y est animé : il est visible dès le chargement.
+// La photo est l'image la plus grande du premier écran (LCP) : chargée tout
+// de suite, en priorité haute (fetchPriority, que Lighthouse demande).
 export function Hero() {
   return (
     <section
@@ -41,7 +43,8 @@ export function Hero() {
           src={PHOTO}
           alt={PHOTOS[PHOTO].alt}
           fill
-          preload
+          loading="eager"
+          fetchPriority="high"
           sizes="(min-width: 1152px) 480px, (min-width: 768px) 45vw, 100vw"
           className="object-cover object-[50%_42%]"
         />

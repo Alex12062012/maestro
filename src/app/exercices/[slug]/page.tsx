@@ -136,7 +136,7 @@ export default async function ExercisePage({ params }: PageProps<"/exercices/[sl
                   {days.length > 0 ? (
                     <Link
                       href={`/programme/semaine/${week}`}
-                      aria-label={`Semaine ${week} : ${listFr([...days])}`}
+                      aria-label={`Semaine ${pad2(week)} : ${listFr([...days])}`}
                       className="flex h-11 items-center justify-center rounded bg-ink font-mono text-sm text-bg transition-transform duration-150 hover:bg-ink/85 active:scale-[0.96]"
                     >
                       {pad2(week)}
