@@ -13,9 +13,12 @@ const archivo = Archivo({
   axes: ["wdth"],
 });
 
+// Police des chiffres et petites étiquettes : pas préchargée, pour laisser
+// la bande passante du premier écran à Archivo et à la photo principale (LCP).
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
+  preload: false,
 });
 
 const TITLE = "MAESTRO - Dirige ton jeu";
