@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useSyncExternalStore } from "react";
 import { MoonIcon, SunIcon } from "@phosphor-icons/react";
-import { loadTheme, parseTheme, saveTheme, type Theme } from "@/lib/theme";
+import { loadTheme, parseTheme, saveTheme, syncThemeColor, type Theme } from "@/lib/theme";
 
 // Le thème vit sur <html data-theme>, posé avant la peinture par THEME_SCRIPT.
 const listeners = new Set<() => void>();
@@ -16,6 +16,7 @@ const current = (): Theme => parseTheme(document.documentElement.dataset.theme);
 
 function apply(theme: Theme) {
   document.documentElement.dataset.theme = theme;
+  syncThemeColor();
   listeners.forEach((cb) => cb());
 }
 

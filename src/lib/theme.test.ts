@@ -80,4 +80,35 @@ describe("script inline du <head>", () => {
       expect(runScript(s)).toBe("dark");
     }
   });
+
+  it("crée la meta theme-color avec le fond du thème lu dans les variables CSS", () => {
+    const meta = { name: "", content: "" };
+    const document = {
+      documentElement: { setAttribute: () => {} },
+      querySelector: () => null,
+      createElement: () => meta,
+      head: { appendChild: () => {} },
+      addEventListener: () => {},
+    };
+    vi.stubGlobal("getComputedStyle", () => ({
+      getPropertyValue: (k: string) => (k === "--bg" ? " #0c0f0e " : ""),
+    }));
+    new Function("localStorage", "document", THEME_SCRIPT)(memoryStorage(), document);
+    expect(meta).toEqual({ name: "theme-color", content: "#0c0f0e" });
+  });
+
+  it("feuille de style pas encore chargée : la meta reste sans couleur, sans erreur", () => {
+    const meta = { name: "", content: "" };
+    const document = {
+      documentElement: { setAttribute: () => {} },
+      querySelector: () => meta,
+      head: { appendChild: () => {} },
+      addEventListener: () => {},
+    };
+    vi.stubGlobal("getComputedStyle", () => ({ getPropertyValue: () => "" }));
+    expect(() =>
+      new Function("localStorage", "document", THEME_SCRIPT)(memoryStorage(), document),
+    ).not.toThrow();
+    expect(meta.content).toBe("");
+  });
 });

@@ -6,17 +6,17 @@ const FACTS = [
   {
     label: "Prix",
     value: "Gratuit",
-    text: "Pas d'abonnement, rien à acheter.",
+    text: "Pas d’abonnement, rien à acheter.",
   },
   {
     label: "Inscription",
     value: "Aucune",
-    text: "Pas de compte ni d'adresse e-mail. Votre enfant arrive et commence.",
+    text: "Pas de compte ni d’adresse e-mail. Votre enfant arrive et commence.",
   },
   {
     label: "Données personnelles",
     value: "Aucune collectée",
-    text: "Le test et la progression restent dans le navigateur de son appareil. Une mesure d'audience anonyme, sans cookie, compte les pages vues et trois étapes : test fini, programme commencé, semaine finie.",
+    text: "Le test et la progression restent dans le navigateur de son appareil. Une mesure d’audience anonyme, sans cookie, compte les pages vues.",
   },
   {
     label: "Exercices",
@@ -40,8 +40,8 @@ export function Parents() {
             Pour les parents
           </h2>
           <p className="mt-5 max-w-[40ch] leading-relaxed text-ink-2">
-            MAESTRO aide votre enfant à s&apos;entraîner seul entre deux séances de club. Ce
-            n&apos;est pas un suivi médical.
+            MAESTRO aide votre enfant à s’entraîner seul entre deux séances de club. Ce
+            n’est pas un suivi médical.
           </p>
           <Link
             href="/confidentialite"

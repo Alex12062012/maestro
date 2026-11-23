@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const send = vi.hoisted(() => vi.fn());
 vi.mock("@vercel/analytics", () => ({ track: send }));
 
-import { track, trackOnce } from "@/lib/track";
+import { beforeSend, track, trackOnce } from "@/lib/track";
 
 const store = new Map<string, string>();
 
@@ -81,5 +81,38 @@ describe("trackOnce", () => {
       throw new Error("bloqué");
     });
     expect(() => trackOnce("week_done", "week_done:3")).not.toThrow();
+  });
+});
+
+describe("beforeSend", () => {
+  it("événement : l'adresse est réduite à l'origine du site, sans chemin ni paramètres", () => {
+    const out = beforeSend({ type: "event", url: "https://maestro.example/programme/semaine/3?x=1#jour" });
+    expect(out).toEqual({ type: "event", url: "https://maestro.example" });
+  });
+
+  it("garde le reste de l'événement (nom) tel quel", () => {
+    const event = { type: "event" as const, url: "https://maestro.example/test", payload: { name: "test_done" } };
+    expect(beforeSend(event)).toEqual({ ...event, url: "https://maestro.example" });
+  });
+
+  it("page vue : inchangée", () => {
+    const view = { type: "pageview" as const, url: "https://maestro.example/programme/semaine/3" };
+    expect(beforeSend(view)).toBe(view);
+  });
+
+  it("adresse illisible : l'événement est abandonné, rien ne lève", () => {
+    expect(() => beforeSend({ type: "event", url: "pas une adresse" })).not.toThrow();
+    expect(beforeSend({ type: "event", url: "pas une adresse" })).toBeNull();
+  });
+
+  it("objet qui lève à la lecture : rien ne casse, la mesure est abandonnée", () => {
+    const broken = {
+      get type(): "event" {
+        throw new Error("cassé");
+      },
+      url: "https://maestro.example/test",
+    };
+    expect(() => beforeSend(broken)).not.toThrow();
+    expect(beforeSend(broken)).toBeNull();
   });
 });

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Archivo, JetBrains_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { NavTracker } from "@/components/nav/NavTracker";
+import { SiteAnalytics } from "@/components/SiteAnalytics";
 import { THEME_SCRIPT } from "@/lib/theme";
 import "@/app/globals.css";
 
@@ -18,10 +18,25 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
+const TITLE = "MAESTRO - Dirige ton jeu";
+const DESCRIPTION =
+  "Programme de foot gratuit sur 12 semaines pour les 13-14 ans : un test de profil, des séances jour par jour, des fiches d’exercices et un suivi de progression. Sans inscription.";
+
+// Aperçu des liens partagés (WhatsApp, Snapchat...) : image dans
+// src/app/opengraph-image.jpg, adresses absolues depuis la prod.
 export const metadata: Metadata = {
-  title: "MAESTRO - Dirige ton jeu",
-  description:
-    "Programme de foot gratuit sur 12 semaines pour les 13-14 ans : un test de profil, des séances jour par jour, des fiches d'exercices et un suivi de progression. Sans inscription.",
+  metadataBase: new URL("https://maestro-nine-chi.vercel.app"),
+  title: TITLE,
+  description: DESCRIPTION,
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    siteName: "MAESTRO",
+    title: TITLE,
+    description: DESCRIPTION,
+    url: "/",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -50,7 +65,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteFooter />
         <NavTracker />
         {/* Mesure d'audience anonyme, sans cookie (voir /confidentialite). */}
-        <Analytics />
+        <SiteAnalytics />
       </body>
     </html>
   );
