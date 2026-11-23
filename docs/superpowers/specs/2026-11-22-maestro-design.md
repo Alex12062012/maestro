@@ -123,3 +123,11 @@ Lecture : site d'entraînement sportif pour ados et parents, langage "labo de pe
 - Nombre exact et noms des profils du test, formule de score par pilier.
 - Choix précis des photos et des teintes exactes dans la palette ci-dessus.
 - Découpage en composants.
+
+## Décisions (23/11/2026)
+
+Prises après la validation de ce document. Le texte ci-dessus est gardé tel quel ; là où il diffère, ces décisions priment.
+
+- **Thème sombre par défaut** (décision d'Alexandre). Le bouton soleil/lune du header passe en clair, et le choix est gardé dans le navigateur. Remplace "clair uniquement" (section Direction artistique). Les couleurs restent des variables, testées en contraste dans les deux thèmes.
+- **Vercel Web Analytics à la place de Supabase** (décision d'Alexandre : son organisation Supabase a déjà deux projets actifs, un troisième serait payant). Aucune table `events`, aucun projet Supabase ; le paquet `@supabase/supabase-js` est retiré. Remplace le paragraphe Supabase de la section Technique et la mention "offres gratuites Vercel et Supabase".
+- **Événements personnalisés réservés à Pro ou Enterprise.** Le site envoie `test_done`, `program_started` et `week_done` (nom seul, adresse réduite à l'origine du site), mais sur l'offre gratuite Hobby, Vercel ne les enregistre pas : seules les pages vues sont comptées. Passer à Pro ou compter les étapes autrement est une décision produit d'Alexandre.
