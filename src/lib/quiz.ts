@@ -1,5 +1,6 @@
 import { PILLARS, QUESTIONS, type Pillar, type ProfileId } from "@/content/quiz";
 import { load, remove, save } from "@/lib/storage";
+import { track, trackOnce } from "@/lib/track";
 
 export type Answer = 1 | 2 | 3 | 4 | 5;
 
@@ -136,6 +137,24 @@ export function writeQuiz(state: QuizState): void {
 
 export function clearQuiz(): void {
   remove(QUIZ_KEY);
+}
+
+/**
+ * Réponse à la question en cours : état suivant, gardé dans le navigateur.
+ * La dernière réponse compte le test comme fini (compteur anonyme), une fois
+ * par test : revenir voir son résultat ne renvoie rien.
+ */
+export function answerQuestion(state: QuizState, value: Answer): QuizState {
+  const id = QUESTIONS[state.current].id;
+  const next = { answers: { ...state.answers, [id]: value }, current: state.current + 1 };
+  writeQuiz(next);
+  if (isComplete(next)) track("test_done");
+  return next;
+}
+
+/** Clic sur "Commencer le programme" : seul le premier de ce navigateur compte. */
+export function startProgram(): void {
+  trackOnce("program_started");
 }
 
 /** Résultat du test s'il est fini, sinon null (pour `/programme` par exemple). */

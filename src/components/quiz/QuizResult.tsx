@@ -5,8 +5,7 @@ import { ArrowCounterClockwiseIcon, ArrowRightIcon } from "@phosphor-icons/react
 import { Button, ButtonLink } from "@/components/Button";
 import { Radar } from "@/components/charts/Radar";
 import { PILLARS, PILLAR_LABELS, PROFILES } from "@/content/quiz";
-import { resultHighlights, type QuizResult as Result } from "@/lib/quiz";
-import { trackOnce } from "@/lib/track";
+import { resultHighlights, startProgram, type QuizResult as Result } from "@/lib/quiz";
 
 function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -95,7 +94,7 @@ export function QuizResult({
             tabIndex={-1}
             className="text-5xl leading-[0.9] font-extrabold uppercase font-stretch-75% text-balance md:text-7xl"
           >
-            <span className="sr-only">Ton profil : </span>
+            <span className="sr-only">Ton profil : </span>
             {profile.name}
           </h2>
           <p className="mt-5 max-w-[48ch] text-lg leading-relaxed text-on-dark/80">{profile.summary}</p>
@@ -146,8 +145,7 @@ export function QuizResult({
       </div>
 
       <div className="mt-12 flex flex-wrap gap-3">
-        {/* Compteur anonyme : seul le premier clic de ce navigateur compte. */}
-        <ButtonLink href="/programme" onClick={() => trackOnce("program_started")}>
+        <ButtonLink href="/programme" onClick={startProgram}>
           Commencer le programme
           <ArrowRightIcon size={18} weight="regular" aria-hidden />
         </ButtonLink>

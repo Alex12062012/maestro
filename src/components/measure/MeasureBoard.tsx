@@ -13,16 +13,20 @@ import {
   emptyMeasures,
   parseMeasure,
   parseWeekEntry,
+  readDrafts,
   readMeasures,
+  writeDrafts,
   writeMeasures,
   type Checkpoint,
+  type Drafts as SavedDrafts,
   type Measures,
 } from "@/lib/measure";
 
 const noSubscribe = () => () => {};
 
 // Le HTML statique montre le formulaire vide et l'état sans relevé ; le
-// navigateur reprend ensuite les mesures gardées sous la clé `measures`.
+// navigateur reprend ensuite les mesures gardées sous la clé `measures`, et ce
+// qui avait été tapé sans être enregistré (`measures-draft`).
 // Aucun champ n'a d'attribut `name` et l'envoi est toujours intercepté : sans
 // JavaScript, le formulaire ne met jamais un résultat dans une URL.
 export function MeasureBoard() {
@@ -34,9 +38,9 @@ export function MeasureBoard() {
   // Clés distinctes : le passage au navigateur remonte le formulaire avec
   // les mesures gardées, au lieu de garder l'état vide du rendu serveur.
   return hydrated ? (
-    <Board key="navigateur" initial={readMeasures()} />
+    <Board key="navigateur" initial={readMeasures()} stored={readDrafts()} />
   ) : (
-    <Board key="serveur" initial={emptyMeasures()} />
+    <Board key="serveur" initial={emptyMeasures()} stored={{}} />
   );
 }
 
@@ -63,12 +67,23 @@ function draftsFor(m: Measures, cp: Checkpoint): Record<string, string> {
 const allDrafts = (m: Measures) =>
   Object.fromEntries(CHECKPOINTS.map((cp) => [cp, draftsFor(m, cp)])) as Drafts;
 
-function Board({ initial }: { initial: Measures }) {
+// Garde dans le navigateur les semaines en cours de saisie, et seulement elles.
+function keepDrafts(drafts: Drafts, edited: ReadonlySet<Checkpoint>) {
+  writeDrafts(Object.fromEntries([...edited].map((cp) => [cp, drafts[cp]])));
+}
+
+function Board({ initial, stored }: { initial: Measures; stored: SavedDrafts }) {
   const [measures, setMeasures] = useState(initial);
-  const [week, setWeek] = useState<Checkpoint>(() => nextCheckpoint(initial));
-  // Brouillons par semaine : changer de semaine ne perd rien de ce qui est tapé.
-  const [drafts, setDrafts] = useState<Drafts>(() => allDrafts(initial));
-  const [edited, setEdited] = useState<ReadonlySet<Checkpoint>>(new Set());
+  // Une saisie laissée en cours : on revient dessus.
+  const [week, setWeek] = useState<Checkpoint>(
+    () => CHECKPOINTS.find((cp) => stored[cp]) ?? nextCheckpoint(initial),
+  );
+  // Brouillons par semaine : changer de semaine, de page ou recharger ne perd
+  // rien de ce qui est tapé.
+  const [drafts, setDrafts] = useState<Drafts>(() => ({ ...allDrafts(initial), ...stored }));
+  const [edited, setEdited] = useState<ReadonlySet<Checkpoint>>(
+    () => new Set(CHECKPOINTS.filter((cp) => stored[cp])),
+  );
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState("");
   const [status, setStatus] = useState("");
@@ -100,8 +115,11 @@ function Board({ initial }: { initial: Measures }) {
   }
 
   function edit(id: string, value: string) {
-    setDrafts((d) => ({ ...d, [week]: { ...d[week], [id]: value } }));
-    setEdited((s) => new Set(s).add(week));
+    const nextDrafts = { ...drafts, [week]: { ...drafts[week], [id]: value } };
+    const nextEdited = new Set(edited).add(week);
+    setDrafts(nextDrafts);
+    setEdited(nextEdited);
+    keepDrafts(nextDrafts, nextEdited);
     if (errors[id]) setErrors((x) => ({ ...x, [id]: "" }));
     setFormError("");
     setStatus("");
@@ -116,7 +134,7 @@ function Board({ initial }: { initial: Measures }) {
 
   function submit(e: FormEvent) {
     e.preventDefault();
-    const entry = parseWeekEntry(drafts[week]);
+    const entry = parseWeekEntry(drafts[week], measures[week]);
     if (!entry.ok) {
       setErrors(entry.errors);
       setFormError(entry.form ?? "");
@@ -129,16 +147,17 @@ function Board({ initial }: { initial: Measures }) {
     writeMeasures(saved);
     setMeasures(saved);
     setDrafts((d) => ({ ...d, [week]: draftsFor(saved, week) }));
-    setEdited((s) => {
-      const next = new Set(s);
-      next.delete(week);
-      return next;
-    });
+    const nextEdited = new Set(edited);
+    nextEdited.delete(week);
+    setEdited(nextEdited);
+    keepDrafts(drafts, nextEdited);
     setErrors({});
     setFormError("");
     const n = Object.keys(entry.values).length;
     setStatus(
-      `Semaine ${WEEK_OF[week]} enregistrée : ${n} test${n > 1 ? "s" : ""} sur ${BENCHMARKS.length}. Les courbes sont à jour.`,
+      n === 0
+        ? `Semaine ${WEEK_OF[week]} effacée. Les courbes sont à jour.`
+        : `Semaine ${WEEK_OF[week]} enregistrée : ${n} test${n > 1 ? "s" : ""} sur ${BENCHMARKS.length}. Les courbes sont à jour.`,
     );
   }
 
@@ -157,8 +176,9 @@ function Board({ initial }: { initial: Measures }) {
           <p className="font-mono text-sm text-ink-2">Le dimanche des semaines 1, 6 et 12</p>
         </div>
         <p className="mt-4 max-w-[62ch] leading-relaxed text-ink-2">
-          Remplis les tests que tu as faits. Une case vide veut dire que le test n&apos;a pas été
-          mesuré cette fois : la semaine s&apos;enregistre quand même.
+          Remplis les tests que tu as faits. Une case vide veut dire que le test n’a pas été
+          mesuré cette fois : la semaine s’enregistre quand même. Pour effacer une semaine,
+          vide toutes ses cases et enregistre.
         </p>
 
         <div role="group" aria-label="Semaine du relevé" className="mt-6 flex flex-wrap gap-2">
@@ -172,7 +192,7 @@ function Board({ initial }: { initial: Measures }) {
             >
               Semaine {WEEK_OF[cp]}
               <span className="font-mono text-xs font-normal opacity-70">
-                <span className="sr-only">, tests mesurés : </span>
+                <span className="sr-only">, tests mesurés : </span>
                 {filled(measures, cp)}/{BENCHMARKS.length}
               </span>
             </button>
@@ -218,7 +238,7 @@ function Board({ initial }: { initial: Measures }) {
                       onBlur={() => check(b)}
                       aria-invalid={error ? true : undefined}
                       aria-describedby={`${field}-aide${error ? ` ${field}-erreur` : ""}`}
-                      className="h-12 w-full rounded border border-line bg-bg pr-20 pl-3 font-mono text-lg transition-colors duration-150 hover:border-ink-2 focus:border-ink aria-invalid:border-2 aria-invalid:border-ink"
+                      className="h-12 w-full rounded border border-ink-2 bg-bg pr-20 pl-3 font-mono text-lg transition-colors duration-150 hover:border-ink focus:border-ink aria-invalid:border-2 aria-invalid:border-ink"
                     />
                     <span
                       aria-hidden
@@ -320,7 +340,7 @@ function Trend({ benchmark, measures }: { benchmark: Benchmark; measures: Measur
         {note}
         {benchmark.better === "lower" && (
           <span className="block font-mono text-xs text-on-dark/60">
-            Plus c&apos;est bas, mieux c&apos;est
+            Plus c’est bas, mieux c’est
           </span>
         )}
       </p>
@@ -333,8 +353,8 @@ function EmptyState() {
   return (
     <div className="mt-6 max-w-[60ch]">
       <p className="text-lg leading-relaxed">
-        Aucun relevé pour l&apos;instant. Le premier se fait le dimanche de la semaine 1, pendant la
-        séance de tests : ta note de confiance d&apos;abord, puis l&apos;échauffement, les jongles, le
+        Aucun relevé pour l’instant. Le premier se fait le dimanche de la semaine 1, pendant la
+        séance de tests : ta note de confiance d’abord, puis l’échauffement, les jongles, le
         slalom, le sprint et les frappes.
       </p>
       <p className="mt-3 leading-relaxed text-on-dark/75">

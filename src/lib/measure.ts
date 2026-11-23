@@ -1,7 +1,7 @@
 // Saisie et stockage des tests de référence (page Suivi). Les mesures sont
 // gardées dans le navigateur sous la clé `measures`, par semaine de test.
 import { BENCHMARKS, type Benchmark, type Unit } from "@/content/benchmarks";
-import { load, save } from "@/lib/storage";
+import { load, remove, save } from "@/lib/storage";
 
 export const CHECKPOINTS = ["w1", "w6", "w12"] as const;
 export type Checkpoint = (typeof CHECKPOINTS)[number];
@@ -20,8 +20,8 @@ const NUMBER = /^\d+(?:[.,]\d+)?$/;
 // Au-delà, c'est une faute de frappe (ou un nombre que JavaScript lit Infinity).
 const MAX: Record<Unit, number> = { s: 120, reps: 10000, "/10": 10 };
 const MAX_ERROR: Record<Unit, string> = {
-  s: "120 secondes au maximum : vérifie ton chrono.",
-  reps: "10 000 au maximum : vérifie ton compte.",
+  s: "120 secondes au maximum : vérifie ton chrono.",
+  reps: "10 000 au maximum : vérifie ton compte.",
   "/10": "La note va de 0 à 10.",
 };
 
@@ -69,9 +69,13 @@ export type WeekEntry =
 /**
  * Relevé d'une semaine, champ par champ. Une case vide veut dire "pas mesuré
  * cette fois" : elle ne bloque rien. Une case remplie doit passer
- * parseMeasure. Sans aucune case remplie, il n'y a rien à enregistrer.
+ * parseMeasure. Sans aucune case remplie : si la semaine avait déjà des
+ * mesures (`saved`), elle s'efface ; sinon il n'y a rien à enregistrer.
  */
-export function parseWeekEntry(drafts: Record<string, string>): WeekEntry {
+export function parseWeekEntry(
+  drafts: Record<string, string>,
+  saved: Record<string, number> = {},
+): WeekEntry {
   const values: Record<string, number> = {};
   const errors: Record<string, string> = {};
   for (const b of BENCHMARKS) {
@@ -82,8 +86,8 @@ export function parseWeekEntry(drafts: Record<string, string>): WeekEntry {
     else errors[b.id] = r.error;
   }
   if (Object.keys(errors).length > 0) return { ok: false, errors };
-  if (Object.keys(values).length === 0) {
-    return { ok: false, errors, form: "Entre au moins un résultat avant d'enregistrer la semaine." };
+  if (Object.keys(values).length === 0 && Object.keys(saved).length === 0) {
+    return { ok: false, errors, form: "Entre au moins un résultat avant d’enregistrer la semaine." };
   }
   return { ok: true, values };
 }
@@ -137,4 +141,40 @@ export function readMeasures(): Measures {
 
 export function writeMeasures(measures: Measures): void {
   save(MEASURES_KEY, measures);
+}
+
+// Brouillons : ce qui est tapé mais pas encore enregistré, par semaine. Gardés
+// dans le navigateur pour qu'un lien, le bouton Retour ou un rechargement ne
+// les perde pas (une navigation dans le site ne déclenche pas beforeunload).
+export const DRAFTS_KEY = "measures-draft";
+export type Drafts = Partial<Record<Checkpoint, Record<string, string>>>;
+
+// Plus long que tout ce qu'accepte parseMeasure : au-delà, c'est du bruit.
+const DRAFT_MAX = 20;
+
+/** Garde seulement les semaines et les tests connus, en texte court. */
+export function parseDrafts(raw: unknown): Drafts {
+  const out: Drafts = {};
+  if (!isRecord(raw)) return out;
+  for (const cp of CHECKPOINTS) {
+    const week = raw[cp];
+    if (!isRecord(week)) continue;
+    out[cp] = Object.fromEntries(
+      BENCHMARKS.map((b) => {
+        const v = week[b.id];
+        return [b.id, typeof v === "string" ? v.slice(0, DRAFT_MAX) : ""];
+      }),
+    );
+  }
+  return out;
+}
+
+export function readDrafts(): Drafts {
+  return parseDrafts(load<unknown>(DRAFTS_KEY, null));
+}
+
+/** Aucune semaine en cours de saisie : la clé est retirée. */
+export function writeDrafts(drafts: Drafts): void {
+  if (Object.keys(drafts).length === 0) remove(DRAFTS_KEY);
+  else save(DRAFTS_KEY, drafts);
 }

@@ -5,8 +5,11 @@ import {
   delta,
   parseMeasure,
   parseMeasures,
+  parseDrafts,
   parseWeekEntry,
+  readDrafts,
   readMeasures,
+  writeDrafts,
   writeMeasures,
 } from "@/lib/measure";
 
@@ -124,6 +127,20 @@ describe("parseWeekEntry (enregistrer une semaine)", () => {
     expect(parseWeekEntry({}).ok).toBe(false);
   });
 
+  it("tout vidé sur une semaine déjà enregistrée : la semaine s'efface", () => {
+    expect(parseWeekEntry(blank, { slalom: 14.2 })).toEqual({ ok: true, values: {} });
+  });
+
+  it("tout vidé sur une semaine sans relevé : toujours rien à enregistrer", () => {
+    const r = parseWeekEntry(blank, {});
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.form?.trim()).toBeTruthy();
+  });
+
+  it("une case invalide bloque aussi l'effacement", () => {
+    expect(parseWeekEntry({ ...blank, slalom: "abc" }, { slalom: 14.2 }).ok).toBe(false);
+  });
+
   it("virgule acceptée, 11 en /10 et 12.5 jongles refusés", () => {
     expect(parseWeekEntry({ ...blank, "sprint-20": "3,4" })).toEqual({
       ok: true,
@@ -216,5 +233,79 @@ describe("readMeasures / writeMeasures", () => {
     });
     expect(() => writeMeasures({ w1: { slalom: 12 }, w6: {}, w12: {} })).not.toThrow();
     expect(readMeasures()).toEqual({ w1: {}, w6: {}, w12: {} });
+  });
+});
+
+describe("brouillons du relevé (tapés, pas encore enregistrés)", () => {
+  const store = new Map<string, string>();
+
+  beforeEach(() => {
+    store.clear();
+    vi.stubGlobal("localStorage", {
+      getItem: (k: string) => store.get(k) ?? null,
+      setItem: (k: string, v: string) => void store.set(k, v),
+      removeItem: (k: string) => void store.delete(k),
+    });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("relit les semaines en cours de saisie, sous la clé measures-draft", () => {
+    writeDrafts({ w6: { slalom: "13,1", confiance: "" } });
+    expect(store.has("maestro:v1:measures-draft")).toBe(true);
+    expect(readDrafts()).toEqual({
+      w6: {
+        "jongles-droit": "",
+        "jongles-gauche": "",
+        slalom: "13,1",
+        "sprint-20": "",
+        finition: "",
+        confiance: "",
+      },
+    });
+  });
+
+  it("aucun brouillon : la clé est retirée", () => {
+    writeDrafts({ w1: { slalom: "12" } });
+    writeDrafts({});
+    expect(store.has("maestro:v1:measures-draft")).toBe(false);
+    expect(readDrafts()).toEqual({});
+  });
+
+  it("forme inattendue : semaines et tests inconnus ignorés, valeurs non texte vidées", () => {
+    expect(parseDrafts({ w6: { slalom: 12, inconnu: "3" }, w99: { slalom: "1" } })).toEqual({
+      w6: {
+        "jongles-droit": "",
+        "jongles-gauche": "",
+        slalom: "",
+        "sprint-20": "",
+        finition: "",
+        confiance: "",
+      },
+    });
+    expect(parseDrafts("abc")).toEqual({});
+    expect(parseDrafts(null)).toEqual({});
+  });
+
+  it("texte trop long coupé à 20 caractères", () => {
+    expect(parseDrafts({ w1: { slalom: "1".repeat(50) } }).w1?.slalom).toHaveLength(20);
+  });
+
+  it("stockage bloqué : aucun brouillon, aucune erreur", () => {
+    vi.stubGlobal("localStorage", {
+      getItem: () => {
+        throw new Error("SecurityError");
+      },
+      setItem: () => {
+        throw new Error("SecurityError");
+      },
+      removeItem: () => {
+        throw new Error("SecurityError");
+      },
+    });
+    expect(() => writeDrafts({ w1: { slalom: "12" } })).not.toThrow();
+    expect(readDrafts()).toEqual({});
   });
 });
